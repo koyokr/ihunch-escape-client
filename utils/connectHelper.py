@@ -1,5 +1,7 @@
 from utils.appLayout import Ui_MainWindow
 from PyQt5 import QtCore, QtWidgets
+import datetime
+import cv2
 
 class Setting(Ui_MainWindow):
 
@@ -24,3 +26,28 @@ class Setting(Ui_MainWindow):
         filter = Filter(widget)
         widget.installEventFilter(filter)
         return filter.clicked
+
+
+class Timer(QtCore.QThread):
+
+    def __init__(self):
+        super().__init__()
+        self.timer = QtCore.QTimer()
+        print("hid")
+
+    def run(self):
+        self.timer.setInterval(self.ui.now_capturecycle)
+        self.timer.timeout.connect(self.captureImage)
+        self.timer.start
+        print("hi")
+
+    """이미지 캡쳐하기"""
+    #현재 시간 가져오기
+    def getNow(self):
+        now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        return now
+
+    #이미지 캡쳐
+    def captureImage(self, image):
+        now = self.getNow()
+        cv2.imwrite("C:/pythonproject/pyqt/pythonProject1/savedimage/" + str(now) + ".png", image)

@@ -61,7 +61,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <property name="iconSize">
      <size>
@@ -146,23 +146,26 @@
       <property name="checkable">
        <bool>false</bool>
       </property>
-      <widget class="QLabel" name="warning_red_turtle">
+      <widget class="QLabel" name="turtle_icon">
        <property name="geometry">
         <rect>
-         <x>266</x>
-         <y>10</y>
-         <width>130</width>
-         <height>130</height>
+         <x>0</x>
+         <y>70</y>
+         <width>101</width>
+         <height>71</height>
         </rect>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../resource/turtle_.png</pixmap>
+        <pixmap>../resource/그림1.png</pixmap>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QLabel" name="warning_red_bg">
+      <widget class="QLabel" name="warning_label">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -171,18 +174,13 @@
          <height>141</height>
         </rect>
        </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">rgb255, 0, 0</string>
-       </property>
        <property name="text">
-        <string/>
+        <string>TextLabel</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <zorder>warning_red_bg</zorder>
-      <zorder>warning_red_turtle</zorder>
      </widget>
      <zorder>warningFrame_1</zorder>
      <zorder>videoFrame</zorder>
@@ -249,23 +247,26 @@
       <property name="checkable">
        <bool>false</bool>
       </property>
-      <widget class="QLabel" name="warning_red_turtle_2">
+      <widget class="QLabel" name="turtle_icon_2">
        <property name="geometry">
         <rect>
-         <x>266</x>
-         <y>10</y>
-         <width>130</width>
-         <height>130</height>
+         <x>0</x>
+         <y>70</y>
+         <width>101</width>
+         <height>71</height>
         </rect>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../resource/turtle_.png</pixmap>
+        <pixmap>../resource/그림1.png</pixmap>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QLabel" name="warning_red_bg_2">
+      <widget class="QLabel" name="warning_label_2">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -275,11 +276,12 @@
         </rect>
        </property>
        <property name="text">
-        <string/>
+        <string>TextLabel</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <zorder>warning_red_bg_2</zorder>
-      <zorder>warning_red_turtle_2</zorder>
      </widget>
     </widget>
     <widget class="QWidget" name="setting">

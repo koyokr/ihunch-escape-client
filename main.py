@@ -1,5 +1,5 @@
 import sys
-from utils import appLayout, imageCapture, connectHelper
+from utils import appLayout, connectHelper
 from PyQt5 import QtCore, QtWidgets, QtGui
 
 if __name__ == '__main__':

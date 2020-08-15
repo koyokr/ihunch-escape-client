@@ -6,30 +6,28 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-import cv2
-import requests
-import numpy as np
-from utils.myCam import VideoThread
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_MainWindow(object):
-
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(689, 709)
-        MainWindow.setMinimumSize(QtCore.QSize(689, 714))
-        MainWindow.setMaximumSize(QtCore.QSize(689, 714))
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+class Ui_TurtleNeck(object):
+    def setupUi(self, TurtleNeck):
+        TurtleNeck.setObjectName("TurtleNeck")
+        TurtleNeck.resize(689, 709)
+        TurtleNeck.setMinimumSize(QtCore.QSize(689, 709))
+        TurtleNeck.setMaximumSize(QtCore.QSize(689, 709))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("../resource/app_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        TurtleNeck.setWindowIcon(icon)
+        self.centralwidget = QtWidgets.QWidget(TurtleNeck)
         self.centralwidget.setObjectName("centralwidget")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
-        self.tabWidget.setGeometry(QtCore.QRect(0, 0, 691, 715))
+        self.tabWidget.setGeometry(QtCore.QRect(0, 0, 691, 711))
         self.tabWidget.setMinimumSize(QtCore.QSize(0, 0))
         self.tabWidget.setTabletTracking(False)
         self.tabWidget.setAcceptDrops(False)
         self.tabWidget.setAutoFillBackground(False)
         self.tabWidget.setTabPosition(QtWidgets.QTabWidget.North)
         self.tabWidget.setTabShape(QtWidgets.QTabWidget.Rounded)
-        self.tabWidget.setIconSize(QtCore.QSize(144, 25))
+        self.tabWidget.setIconSize(QtCore.QSize(143, 20))
         self.tabWidget.setElideMode(QtCore.Qt.ElideNone)
         self.tabWidget.setUsesScrollButtons(False)
         self.tabWidget.setTabsClosable(False)
@@ -60,20 +58,20 @@ class Ui_MainWindow(object):
         self.warning_red = QtWidgets.QLabel(self.warningFrame_1)
         self.warning_red.setGeometry(QtCore.QRect(0, 0, 326, 141))
         self.warning_red.setText("")
-        self.warning_red.setPixmap(QtGui.QPixmap("resource/realtime_warning_red.png"))
+        self.warning_red.setPixmap(QtGui.QPixmap("../resource/realtime_warning_red.png"))
         self.warning_red.setAlignment(QtCore.Qt.AlignCenter)
         self.warning_red.setObjectName("warning_red")
         self.warning_blue = QtWidgets.QLabel(self.warningFrame_1)
         self.warning_blue.setGeometry(QtCore.QRect(330, 0, 331, 141))
         self.warning_blue.setText("")
-        self.warning_blue.setPixmap(QtGui.QPixmap("resource/realtime_warning.png"))
+        self.warning_blue.setPixmap(QtGui.QPixmap("../resource/realtime_warning.png"))
         self.warning_blue.setAlignment(QtCore.Qt.AlignCenter)
         self.warning_blue.setObjectName("warning_blue")
         self.warningFrame_1.raise_()
         self.videoFrame.raise_()
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("resource/realtime_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.tabWidget.addTab(self.realTime, icon, "")
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("../resource/realtime_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.tabWidget.addTab(self.realTime, icon1, "")
         self.ratio = QtWidgets.QWidget()
         self.ratio.setObjectName("ratio")
         self.barGraphFrame = QtWidgets.QGroupBox(self.ratio)
@@ -98,22 +96,22 @@ class Ui_MainWindow(object):
         self.warning_red_2 = QtWidgets.QLabel(self.warningFrame_2)
         self.warning_red_2.setGeometry(QtCore.QRect(0, 0, 326, 141))
         self.warning_red_2.setText("")
-        self.warning_red_2.setPixmap(QtGui.QPixmap("resource/realtime_warning_red.png"))
+        self.warning_red_2.setPixmap(QtGui.QPixmap("../resource/realtime_warning_red.png"))
         self.warning_red_2.setAlignment(QtCore.Qt.AlignCenter)
         self.warning_red_2.setObjectName("warning_red_2")
         self.warning_blue_2 = QtWidgets.QLabel(self.warningFrame_2)
         self.warning_blue_2.setGeometry(QtCore.QRect(330, 0, 331, 141))
         self.warning_blue_2.setText("")
-        self.warning_blue_2.setPixmap(QtGui.QPixmap("resource/realtime_warning.png"))
+        self.warning_blue_2.setPixmap(QtGui.QPixmap("../resource/realtime_warning.png"))
         self.warning_blue_2.setAlignment(QtCore.Qt.AlignCenter)
         self.warning_blue_2.setObjectName("warning_blue_2")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("resource/ratio_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.tabWidget.addTab(self.ratio, icon1, "")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("../resource/ratio_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.tabWidget.addTab(self.ratio, icon2, "")
         self.setting = QtWidgets.QWidget()
         self.setting.setObjectName("setting")
         self.settingFrame = QtWidgets.QGroupBox(self.setting)
-        self.settingFrame.setGeometry(QtCore.QRect(12, 10, 661, 661))
+        self.settingFrame.setGeometry(QtCore.QRect(12, 12, 661, 661))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)
@@ -144,7 +142,7 @@ class Ui_MainWindow(object):
         self.captureCycleBox.setReadOnly(False)
         self.captureCycleBox.setMinimum(5)
         self.captureCycleBox.setMaximum(60)
-        self.captureCycleBox.setProperty("value", 5)
+        self.captureCycleBox.setProperty("value", 10)
         self.captureCycleBox.setObjectName("captureCycleBox")
         self.warningCycleFrame = QtWidgets.QGroupBox(self.settingFrame)
         self.warningCycleFrame.setGeometry(QtCore.QRect(20, 150, 621, 81))
@@ -204,134 +202,37 @@ class Ui_MainWindow(object):
         self.alarmOffButton.setDefault(True)
         self.alarmOffButton.setFlat(True)
         self.alarmOffButton.setObjectName("alarmOffButton")
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("resource/setting.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.tabWidget.addTab(self.setting, icon2, "")
-        MainWindow.setCentralWidget(self.centralwidget)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("../resource/setting.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.tabWidget.addTab(self.setting, icon3, "")
+        TurtleNeck.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MainWindow)
+        self.retranslateUi(TurtleNeck)
         self.tabWidget.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(TurtleNeck)
 
-        """mycam.VideoThread에서 실시간 카메라 이미지 가져오기"""
-        self.camthread = VideoThread()
-        self.camthread.video_signal.connect(self.getImage)
-        self.camthread.start()
-
-
-    def retranslateUi(self, MainWindow):
+    def retranslateUi(self, TurtleNeck):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "TurtleNeck"))
-        MainWindow.setWindowIcon(QtGui.QIcon("resource/app_icon.png"))
-        self.videoFrame.setTitle(_translate("MainWindow", "화상카메라"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.realTime), _translate("MainWindow", "실시간 화면"))
-        self.barGraphFrame.setTitle(_translate("MainWindow", "막대그래프"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.ratio), _translate("MainWindow", "거북목 통계"))
-        self.settingFrame.setTitle(_translate("MainWindow", "설정"))
-        self.captureCycleFrame.setTitle(_translate("MainWindow", "이미지 촬영 주기(초)"))
-        self.warningCycleFrame.setTitle(_translate("MainWindow", "경고 알림 주기(분)"))
-        self.alarmFrame.setTitle(_translate("MainWindow", "알람 설정"))
-        self.alarmOnButton.setText(_translate("MainWindow", "On"))
-        self.alarmOffButton.setText(_translate("MainWindow", "Off"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.setting), _translate("MainWindow", "환경설정"))
-
-    """이미지 실시간으로 보여주기"""
-    def getImage(self, image):
-        self.update_image(image)
-
-    #ui에 전처리된 이미지 실시간으로 적용
-    def update_image(self, cv_img):
-        qt_img = self.convert_cv_qt(cv_img)
-        self.videoImage.setPixmap(qt_img)
-
-    #가져온 실시간 이미지를 QLabel에 적용하기위한 전처리 함수
-    def convert_cv_qt(self, cv_img):
-        rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
-        h, w, ch = rgb_image.shape
-        bytes_per_line = ch*w
-        convert_to_Qt_format = QtGui.QImage(rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
-        p = convert_to_Qt_format.scaled(640, 480, QtCore.Qt.KeepAspectRatio)
-        return QtGui.QPixmap.fromImage(p)
-
-    """on_off 버튼 클릭 시 한쪽 버튼은 비활성화 하기"""
-    #ON 버튼 눌렀을 때 on버튼 활성화, off 버튼 비활성화
-    def clickOnButton(self):
-        self.alarmOffButton.setChecked(False)
-        self.alarmOnButton.setChecked(True)
-
-    #off 버튼 눌렀을 때 off버튼 활성화, on버튼 비활성화
-    def clickOffButton(self):
-        self.alarmOffButton.setChecked(True)
-        self.alarmOnButton.setChecked(False)
-
-
-    """환경 설정 변경 사항 저장"""
-    #변경사항 저장
-    def changeApply(self):
-        self.now_capturecycle = self.getCaptureCycle()
-        self.now_warningcycle = self.getWarningCycle()
-        self.now_turn = self.getAlarmOn_Off()
-        self.captureCycleBox.setValue(self.now_capturecycle)
-        self.warningCycleBox.setValue(self.now_warningcycle)
-        if self.now_turn:
-            self.clickOnButton()
-        else:
-            self.clickOffButton()
-
-    #촬영 주기 값 가져오기
-    def getCaptureCycle(self):
-        capturecycle = self.captureCycleBox.value()
-        return capturecycle
-
-    #알림 주기 값 가져오기
-    def getWarningCycle(self):
-        warningcycle = self.warningCycleBox.value()
-        return warningcycle
-
-    #알림 설정 값 가져오기
-    def getAlarmOn_Off(self):
-        turn = self.alarmOnButton.isChecked()
-        return turn
-
-
-    """환경설정 탭 클릭"""
-    #저장안된 변경사항 제거
-    def returnToNow(self):
-        self.undoCaptureCycle()
-        self.undoWarningCycle()
-        self.undoAlarmOn_Off()
-
-    #이미지 촬영 주기 변경
-    def undoCaptureCycle(self):
-        self.captureCycleBox.setValue(self.now_capturecycle)
-
-    #경고 알림 주기 변경
-    def undoWarningCycle(self):
-        self.warningCycleBox.setValue(self.now_warningcycle)
-
-    #알람 설정 변경
-    def undoAlarmOn_Off(self):
-        if self.now_turn:
-            self.clickOnButton()
-        else:
-            self.clickOffButton()
-
-    """환경설정 초기화"""
-    def returnInitial(self):
-        self.now_capturecycle = 5
-        self.now_warningcycle = 5
-        self.now_turn = False
-        self.captureCycleBox.setValue(self.now_capturecycle)
-        self.warningCycleBox.setValue(self.now_warningcycle)
-        self.clickOffButton()
+        TurtleNeck.setWindowTitle(_translate("TurtleNeck", "Turtleneck"))
+        self.videoFrame.setTitle(_translate("TurtleNeck", "화상카메라"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.realTime), _translate("TurtleNeck", "실시간 화면"))
+        self.barGraphFrame.setTitle(_translate("TurtleNeck", "막대그래프"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.ratio), _translate("TurtleNeck", "거북목 통계"))
+        self.settingFrame.setTitle(_translate("TurtleNeck", "설정"))
+        self.captureCycleFrame.setTitle(_translate("TurtleNeck", "이미지 촬영 주기(초)"))
+        self.warningCycleFrame.setTitle(_translate("TurtleNeck", "경고 알림 주기(분)"))
+        self.alarmFrame.setTitle(_translate("TurtleNeck", "알람 설정"))
+        self.alarmOnButton.setText(_translate("TurtleNeck", "On"))
+        self.alarmOffButton.setText(_translate("TurtleNeck", "Off"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.setting), _translate("TurtleNeck", "환경설정"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    TurtleNeck = QtWidgets.QMainWindow()
+    ui = Ui_TurtleNeck()
+    ui.setupUi(TurtleNeck)
+    TurtleNeck.show()
     sys.exit(app.exec_())
 
