@@ -1,5 +1,4 @@
 from PyQt5 import QtGui, QtCore
-from utils import app_layout
 import cv2
 import numpy as np
 
@@ -18,9 +17,9 @@ class VideoThread(QtCore.QThread):
 class ShowVideo():
 
     # ui에 전처리된 이미지 실시간으로 적용
-    def update_image(self, cv_img):
+    def update_image(self, cv_img, cam_image):
         qt_img = self.convert_cv_qt(cv_img)
-        app_layout.Ui_MainWindow.cam_image.setPixmap(qt_img)
+        cam_image.setPixmap(qt_img)
 
     # 가져온 실시간 이미지를 QLabel에 적용하기위한 전처리 함수
     def convert_cv_qt(self, cv_img):

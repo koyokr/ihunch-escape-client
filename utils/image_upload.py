@@ -18,8 +18,7 @@ is_success, im_buf_arr = cv2.imencode(".jpg", image)
 byte_im = im_buf_arr.tobytes()
 
 s = requests.session()
-r = s.post('http://api.ihunch.koyo.io/upload/', files={'file': byte_im})
+r = s.post('http://api.ihunch.koyo.io/upload', files={'file': byte_im})
 
 print(repr(r))
 print(repr(r.text))
-

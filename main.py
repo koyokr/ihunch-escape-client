@@ -1,7 +1,29 @@
 import sys
 import cv2
-from utils import app_layout, button_setting, my_cam
+from utils import my_cam, app_layout
 from PyQt5 import QtCore, QtWidgets, QtGui
+
+
+"""탭바 클릭 이벤트 부여"""
+def clickable(widget):
+    class Filter(QtCore.QObject):
+
+        clicked = QtCore.pyqtSignal()  # pyside2 사용자는 pyqtSignal() -> Signal()로 변경
+
+        def eventFilter(self, obj, event):
+
+            if obj == widget:
+                if event.type() == QtCore.QEvent.MouseButtonRelease:
+                    if obj.rect().contains(event.pos()):
+                        self.clicked.emit()
+                        # The developer can opt for .emit(obj) to get the object within the slot.
+                        return True
+
+            return False
+
+    filter = Filter(widget)
+    widget.installEventFilter(filter)
+    return filter.clicked
 
 # ui에 전처리된 이미지 실시간으로 적용
 def update_image(cv_img):
@@ -23,21 +45,21 @@ if __name__ == '__main__':
     MainWindow = QtWidgets.QMainWindow()
     ui = app_layout.Ui_MainWindow()
 
+
     cam_thread = my_cam.VideoThread()
     cam_thread.VIDEO_SIGNAL.connect(update_image)
     cam_thread.start()
 
     ui.setupUi(MainWindow)
-    # """on_off 버튼 누를 때 한쪽은 꺼지게 하기"""
-    # ui.alarmOnButton.clicked.connect(ui.clickOnButton)
-    # ui.alarmOffButton.clicked.connect(ui.clickOffButton)
-    # ui.changeApply()
 
-    # helper = connect_helper.Setting()
-    # helper.clickable(ui.tabWidget.tabBar()).connect(ui.returnToNow)
-    #
-    # ui.applyButton.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(ui.changeApply)
-    # ui.applyButton.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(ui.returnInitial)
+    # 초기 설정값 저장
+    ui.apply_current_setting()
+    # 저장되지 않은 설정 변경 값 삭제
+    clickable(ui.tab_widget.tabBar()).connect(ui.return_current_setting)
+    #apply 버튼 누룰 시 현재 변경 값 저장
+    # ui.set_reset_button.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(ui.apply_current_setting)
+    # #reset 버튼 누를 시 모든 설정 초기화
+    # ui.set_reset_button.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(ui.return_initial_setting) #reset 버튼 누를 시 설정 초기화
 
     MainWindow.show()
     sys.exit(app.exec_())
