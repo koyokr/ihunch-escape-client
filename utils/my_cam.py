@@ -6,12 +6,18 @@ class VideoThread(QtCore.QThread):
     VIDEO_SIGNAL = QtCore.pyqtSignal(np.ndarray)
 
     def run(self):
+        self.running = True
         # capture from web cam
-        cap = cv2.VideoCapture(0)
-        while cap.isOpened():
-            ret, image = cap.read()
-            if ret:
-                self.VIDEO_SIGNAL.emit(image)
+        self.cap = cv2.VideoCapture(0)
+        if self.cap.isOpened():
+            while self.running:
+                ret, image = self.cap.read()
+                if ret:
+                    self.VIDEO_SIGNAL.emit(image)
+
+    def stop_start(self, state):
+        self.running = state
+        self.start()
 
 
 class ShowVideo():

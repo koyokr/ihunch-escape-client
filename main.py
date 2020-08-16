@@ -1,6 +1,6 @@
 import sys
 import cv2
-from utils import my_cam, app_layout
+from utils import my_cam, app_layout, ihunch_warning
 from PyQt5 import QtCore, QtWidgets, QtGui
 
 
@@ -44,21 +44,28 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = app_layout.Ui_MainWindow()
+    status = ihunch_warning.IhunchWarn()
 
+    ui.setupUi(MainWindow)
 
     cam_thread = my_cam.VideoThread()
     cam_thread.VIDEO_SIGNAL.connect(update_image)
+    ui.video_button.toggled.connect(cam_thread.stop_start)
+    ui.video_button.toggled.connect(ui.video_on_off)
     cam_thread.start()
 
-    ui.setupUi(MainWindow)
+    status = ihunch_warning.IhunchWarn()
+    status.status_ihunch(ui.status_bar_1)
+    status.status_normal(ui.status_bar_2)
+    status.status_no_human(ui.status_bar_3)
+    status.status_ihunch(ui.status_bar_4)
 
     # 초기 설정값 저장
     ui.apply_current_setting()
     # 저장되지 않은 설정 변경 값 삭제
     clickable(ui.tab_widget.tabBar()).connect(ui.return_current_setting)
-    #apply 버튼 누룰 시 현재 변경 값 저장
+
     # ui.set_reset_button.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(ui.apply_current_setting)
-    # #reset 버튼 누를 시 모든 설정 초기화
     # ui.set_reset_button.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(ui.return_initial_setting) #reset 버튼 누를 시 설정 초기화
 
     MainWindow.show()
