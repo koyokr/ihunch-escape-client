@@ -6,143 +6,88 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>684</width>
-    <height>674</height>
+    <width>687</width>
+    <height>707</height>
    </rect>
   </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>0</width>
-    <height>0</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>16777215</width>
-    <height>16777215</height>
-   </size>
+  <property name="font">
+   <font>
+    <family>나눔바른고딕</family>
+   </font>
   </property>
   <property name="windowTitle">
-   <string>Turtleneck</string>
+   <string>거북목 탈출 넘버원</string>
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../resource/app_icon.png</normaloff>../resource/app_icon.png</iconset>
+    <normaloff>resource/app_icon.png</normaloff>resource/icon.png</iconset>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QTabWidget" name="tab_widget">
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>691</width>
-      <height>675</height>
+      <x>2</x>
+      <y>2</y>
+      <width>685</width>
+      <height>704</height>
      </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>0</height>
-     </size>
-    </property>
-    <property name="font">
-     <font>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="tabletTracking">
-     <bool>false</bool>
-    </property>
-    <property name="acceptDrops">
-     <bool>false</bool>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="tabPosition">
-     <enum>QTabWidget::North</enum>
-    </property>
-    <property name="tabShape">
-     <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
     <property name="iconSize">
      <size>
-      <width>116</width>
-      <height>25</height>
+      <width>118</width>
+      <height>30</height>
      </size>
-    </property>
-    <property name="elideMode">
-     <enum>Qt::ElideNone</enum>
     </property>
     <property name="usesScrollButtons">
      <bool>false</bool>
     </property>
-    <property name="tabsClosable">
-     <bool>false</bool>
-    </property>
-    <property name="movable">
-     <bool>false</bool>
-    </property>
-    <property name="tabBarAutoHide">
-     <bool>false</bool>
-    </property>
-    <widget class="QWidget" name="cam_tab">
+    <widget class="QWidget" name="cameraWidget">
      <attribute name="icon">
       <iconset>
-       <normaloff>../resource/realtime_icon.png</normaloff>../resource/realtime_icon.png</iconset>
+       <normaloff>resource/realtime_icon.png</normaloff>resource/realtime_icon.png</iconset>
      </attribute>
      <attribute name="title">
       <string>카메라</string>
      </attribute>
-     <widget class="QLabel" name="cam_image">
+     <widget class="QLabel" name="cameraImage">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>100</y>
-        <width>640</width>
-        <height>480</height>
+        <y>110</y>
+        <width>641</width>
+        <height>481</height>
        </rect>
       </property>
       <property name="frameShape">
        <enum>QFrame::Panel</enum>
       </property>
-      <property name="text">
-       <string/>
+      <property name="lineWidth">
+       <number>1</number>
       </property>
      </widget>
-     <widget class="QLabel" name="status_bar_1">
+     <widget class="QLabel" name="cameraStatusBar">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>10</y>
-        <width>640</width>
+        <y>20</y>
+        <width>641</width>
         <height>91</height>
        </rect>
       </property>
       <property name="frameShape">
        <enum>QFrame::Panel</enum>
       </property>
-      <property name="text">
-       <string/>
-      </property>
      </widget>
-     <widget class="QPushButton" name="video_button">
+     <widget class="QPushButton" name="cameraButton">
       <property name="geometry">
        <rect>
-        <x>19</x>
-        <y>578</y>
-        <width>642</width>
-        <height>51</height>
+        <x>20</x>
+        <y>590</y>
+        <width>641</width>
+        <height>61</height>
        </rect>
       </property>
       <property name="font">
@@ -151,6 +96,9 @@
         <weight>75</weight>
         <bold>true</bold>
        </font>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::PreventContextMenu</enum>
       </property>
       <property name="text">
        <string>시작</string>
@@ -163,303 +111,235 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="record_tab">
+    <widget class="QWidget" name="statWidget">
      <attribute name="icon">
       <iconset>
-       <normaloff>../resource/ratio_icon.png</normaloff>../resource/ratio_icon.png</iconset>
+       <normaloff>resource/ratio_icon.png</normaloff>resource/ratio_icon.png</iconset>
      </attribute>
      <attribute name="title">
       <string>통계</string>
      </attribute>
-     <widget class="QTabWidget" name="statistic_tab_widget">
+     <widget class="QTabWidget" name="statTabWidget">
       <property name="geometry">
        <rect>
         <x>-2</x>
         <y>-2</y>
-        <width>691</width>
-        <height>641</height>
+        <width>684</width>
+        <height>663</height>
        </rect>
-      </property>
-      <property name="font">
-       <font>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
       </property>
       <property name="tabPosition">
        <enum>QTabWidget::South</enum>
-      </property>
-      <property name="tabShape">
-       <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <property name="iconSize">
        <size>
-        <width>166</width>
+        <width>168</width>
         <height>30</height>
        </size>
       </property>
-      <widget class="QWidget" name="statistic_1">
-       <property name="font">
-        <font>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
+      <property name="usesScrollButtons">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="statWidget1">
        <attribute name="icon">
         <iconset>
-         <normaloff>../resource/graph_1.png</normaloff>../resource/graph_1.png</iconset>
+         <normaloff>resource/graph_1.png</normaloff>resource/graph_1.png</iconset>
        </attribute>
        <attribute name="title">
         <string>통계 1</string>
        </attribute>
-       <widget class="QLabel" name="status_bar_2">
+       <widget class="QLabel" name="statStatusBar1">
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>10</y>
-          <width>640</width>
+          <y>20</y>
+          <width>641</width>
           <height>91</height>
          </rect>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
         </property>
-        <property name="text">
-         <string/>
-        </property>
        </widget>
-       <widget class="QLabel" name="statistic_image_1">
+       <widget class="QLabel" name="statImage1">
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>100</y>
-          <width>640</width>
-          <height>480</height>
+          <y>110</y>
+          <width>641</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
         </property>
-        <property name="text">
-         <string/>
-        </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="statistic_2">
+      <widget class="QWidget" name="statWidget2">
        <attribute name="icon">
         <iconset>
-         <normaloff>../resource/graph_2.png</normaloff>../resource/graph_2.png</iconset>
+         <normaloff>resource/graph_2.png</normaloff>resource/graph_2.png</iconset>
        </attribute>
        <attribute name="title">
         <string>통계 2</string>
        </attribute>
-       <widget class="QLabel" name="status_bar_3">
+       <widget class="QLabel" name="statStatusBar2">
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>10</y>
-          <width>640</width>
+          <y>20</y>
+          <width>641</width>
           <height>91</height>
          </rect>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
         </property>
-        <property name="text">
-         <string/>
-        </property>
        </widget>
-       <widget class="QLabel" name="statistic_image_2">
+       <widget class="QLabel" name="statImage2">
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>100</y>
-          <width>640</width>
-          <height>480</height>
+          <y>110</y>
+          <width>641</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
         </property>
-        <property name="text">
-         <string/>
-        </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="statistic_3">
+      <widget class="QWidget" name="statWidget3">
        <attribute name="icon">
         <iconset>
-         <normaloff>../resource/graph_3.png</normaloff>../resource/graph_3.png</iconset>
+         <normaloff>resource/graph_3.png</normaloff>resource/graph_3.png</iconset>
        </attribute>
        <attribute name="title">
         <string>통계 3</string>
        </attribute>
-       <widget class="QLabel" name="statistic_image_3">
+       <widget class="QLabel" name="statImage3">
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>100</y>
-          <width>640</width>
-          <height>480</height>
+          <y>110</y>
+          <width>641</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
         </property>
-        <property name="text">
-         <string/>
-        </property>
        </widget>
-       <widget class="QLabel" name="status_bar_4">
+       <widget class="QLabel" name="statStatusBar3">
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>10</y>
-          <width>640</width>
+          <y>20</y>
+          <width>641</width>
           <height>91</height>
          </rect>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
-        </property>
-        <property name="text">
-         <string/>
         </property>
        </widget>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="picture">
+    <widget class="QWidget" name="photoWidget">
      <attribute name="icon">
       <iconset>
-       <normaloff>../resource/picture_icon.png</normaloff>../resource/picture_icon.png</iconset>
+       <normaloff>resource/picture_icon.png</normaloff>resource/picture_icon.png</iconset>
      </attribute>
      <attribute name="title">
       <string>사진</string>
      </attribute>
-     <widget class="QLabel" name="picture_ihunch_ratio">
+     <widget class="QLabel" name="photoStatusBar">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>10</y>
-        <width>640</width>
+        <y>20</y>
+        <width>641</width>
         <height>91</height>
        </rect>
       </property>
       <property name="frameShape">
        <enum>QFrame::Panel</enum>
       </property>
-      <property name="text">
-       <string/>
-      </property>
      </widget>
-     <widget class="QLabel" name="picture_image">
+     <widget class="QLabel" name="photoImage">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>100</y>
-        <width>640</width>
-        <height>480</height>
+        <y>110</y>
+        <width>641</width>
+        <height>481</height>
        </rect>
       </property>
       <property name="frameShape">
        <enum>QFrame::Panel</enum>
       </property>
-      <property name="text">
-       <string/>
-      </property>
      </widget>
-     <widget class="QPushButton" name="left_shift_button">
+     <widget class="QPushButton" name="photoLeftButton">
       <property name="geometry">
        <rect>
-        <x>198</x>
-        <y>583</y>
+        <x>200</x>
+        <y>600</y>
         <width>51</width>
         <height>51</height>
        </rect>
       </property>
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
       <property name="icon">
        <iconset>
-        <normaloff>../resource/left_button.png</normaloff>../resource/left_button.png</iconset>
+        <normaloff>resource/left_button.png</normaloff>resource/left_button.png</iconset>
       </property>
       <property name="iconSize">
        <size>
         <width>50</width>
         <height>70</height>
        </size>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-      <property name="default">
-       <bool>false</bool>
       </property>
       <property name="flat">
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="right_shift_button">
+     <widget class="QPushButton" name="photoLightButton">
       <property name="geometry">
        <rect>
-        <x>431</x>
-        <y>583</y>
+        <x>430</x>
+        <y>600</y>
         <width>51</width>
         <height>51</height>
        </rect>
       </property>
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
       <property name="icon">
        <iconset>
-        <normaloff>../resource/right_button.png</normaloff>../resource/right_button.png</iconset>
+        <normaloff>resource/right_button.png</normaloff>resource/right_button.png</iconset>
       </property>
       <property name="iconSize">
        <size>
         <width>50</width>
         <height>70</height>
        </size>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-      <property name="default">
-       <bool>false</bool>
       </property>
       <property name="flat">
        <bool>true</bool>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="setting_tab">
+    <widget class="QWidget" name="settingWidget">
      <attribute name="icon">
       <iconset>
-       <normaloff>../resource/setting.png</normaloff>../resource/setting.png</iconset>
+       <normaloff>resource/setting.png</normaloff>resource/setting.png</iconset>
      </attribute>
      <attribute name="title">
       <string>설정</string>
      </attribute>
-     <widget class="QGroupBox" name="settingFrame">
+     <widget class="QGroupBox" name="settingGroup">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -471,14 +351,12 @@
       <property name="font">
        <font>
         <pointsize>12</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
        </font>
       </property>
       <property name="title">
        <string>설정</string>
       </property>
-      <widget class="QGroupBox" name="ihunch_warn_set">
+      <widget class="QGroupBox" name="settingNotifyWarningGroup">
        <property name="geometry">
         <rect>
          <x>20</x>
@@ -490,7 +368,7 @@
        <property name="title">
         <string/>
        </property>
-       <widget class="QPushButton" name="ihunch_warn_button">
+       <widget class="QPushButton" name="notifyWarningButton">
         <property name="geometry">
          <rect>
           <x>460</x>
@@ -499,13 +377,10 @@
           <height>21</height>
          </rect>
         </property>
-        <property name="text">
-         <string/>
-        </property>
         <property name="icon">
          <iconset>
-          <normaloff>../resource/off_button_test.png</normaloff>
-          <normalon>../resource/on_button_test.png</normalon>../resource/off_button_test.png</iconset>
+          <normaloff>resource/off_button_test.png</normaloff>
+          <normalon>resource/on_button_test.png</normalon>resource/off_button_test.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -520,7 +395,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QLabel" name="ihunch_warn_title">
+       <widget class="QLabel" name="notifyWarningTitle">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -531,7 +406,6 @@
         </property>
         <property name="font">
          <font>
-          <family>HY중고딕</family>
           <pointsize>12</pointsize>
           <weight>75</weight>
           <bold>true</bold>
@@ -541,7 +415,7 @@
          <string>거북목 경고</string>
         </property>
        </widget>
-       <widget class="QLabel" name="ihunch_warn_comment">
+       <widget class="QLabel" name="notifyWarningComment">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -552,10 +426,7 @@
         </property>
         <property name="font">
          <font>
-          <family>HY중고딕</family>
           <pointsize>10</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -563,7 +434,7 @@
         </property>
        </widget>
       </widget>
-      <widget class="QGroupBox" name="statistic_alarm_set">
+      <widget class="QGroupBox" name="settingNotifyStatGroup">
        <property name="geometry">
         <rect>
          <x>20</x>
@@ -575,7 +446,7 @@
        <property name="title">
         <string/>
        </property>
-       <widget class="QPushButton" name="statistic_alarm_button">
+       <widget class="QPushButton" name="notifyStatButton">
         <property name="geometry">
          <rect>
           <x>460</x>
@@ -584,13 +455,10 @@
           <height>21</height>
          </rect>
         </property>
-        <property name="text">
-         <string/>
-        </property>
         <property name="icon">
          <iconset>
-          <normaloff>../resource/off_button_test.png</normaloff>
-          <normalon>../resource/on_button_test.png</normalon>../resource/off_button_test.png</iconset>
+          <normaloff>resource/off_button_test.png</normaloff>
+          <normalon>resource/on_button_test.png</normalon>resource/off_button_test.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -605,7 +473,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QLabel" name="statistic_alarm_comment">
+       <widget class="QLabel" name="notifyStatComment">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -616,17 +484,14 @@
         </property>
         <property name="font">
          <font>
-          <family>HY중고딕</family>
           <pointsize>10</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
          </font>
         </property>
         <property name="text">
          <string>일정 주기로 통계 알림을 보냅니다.</string>
         </property>
        </widget>
-       <widget class="QLabel" name="statistic_alarm_title">
+       <widget class="QLabel" name="notifyStatTitle">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -637,7 +502,6 @@
         </property>
         <property name="font">
          <font>
-          <family>HY중고딕</family>
           <pointsize>12</pointsize>
           <weight>75</weight>
           <bold>true</bold>
@@ -647,7 +511,7 @@
          <string>통계 알림</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="alarm_cycle">
+       <widget class="QComboBox" name="notifyStatCycle">
         <property name="geometry">
          <rect>
           <x>360</x>
@@ -659,8 +523,6 @@
         <property name="font">
          <font>
           <pointsize>9</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
          </font>
         </property>
         <item>
@@ -690,7 +552,7 @@
         </item>
        </widget>
       </widget>
-      <widget class="QGroupBox" name="record_set">
+      <widget class="QGroupBox" name="settingRecordGroup">
        <property name="geometry">
         <rect>
          <x>20</x>
@@ -702,7 +564,7 @@
        <property name="title">
         <string/>
        </property>
-       <widget class="QPushButton" name="record_button">
+       <widget class="QPushButton" name="recordButton">
         <property name="geometry">
          <rect>
           <x>460</x>
@@ -711,13 +573,10 @@
           <height>21</height>
          </rect>
         </property>
-        <property name="text">
-         <string/>
-        </property>
         <property name="icon">
          <iconset>
-          <normaloff>../resource/off_button_test.png</normaloff>
-          <normalon>../resource/on_button_test.png</normalon>../resource/off_button_test.png</iconset>
+          <normaloff>resource/off_button_test.png</normaloff>
+          <normalon>resource/on_button_test.png</normalon>resource/off_button_test.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -732,7 +591,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QLabel" name="record_comment">
+       <widget class="QLabel" name="recordComment">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -743,17 +602,14 @@
         </property>
         <property name="font">
          <font>
-          <family>HY중고딕</family>
           <pointsize>10</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
          </font>
         </property>
         <property name="text">
          <string>일정 기간 동안의 거북목 사진 및 결과값을 기록합니다.</string>
         </property>
        </widget>
-       <widget class="QLabel" name="record_title">
+       <widget class="QLabel" name="recordTitle">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -764,7 +620,6 @@
         </property>
         <property name="font">
          <font>
-          <family>HY중고딕</family>
           <pointsize>12</pointsize>
           <weight>75</weight>
           <bold>true</bold>
@@ -774,7 +629,7 @@
          <string>기록</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="record_cycle">
+       <widget class="QComboBox" name="recordCycle">
         <property name="geometry">
          <rect>
           <x>360</x>
@@ -786,8 +641,6 @@
         <property name="font">
          <font>
           <pointsize>9</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
          </font>
         </property>
         <item>
@@ -817,7 +670,7 @@
         </item>
        </widget>
       </widget>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="settingApplyButton">
        <property name="geometry">
         <rect>
          <x>460</x>
@@ -826,11 +679,16 @@
          <height>23</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>초기화</string>
+        <string>적용</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="settingInitButton">
        <property name="geometry">
         <rect>
          <x>540</x>
@@ -839,8 +697,13 @@
          <height>23</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>적용</string>
+        <string>초기화</string>
        </property>
       </widget>
      </widget>
