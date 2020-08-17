@@ -20,7 +20,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>resource/app_icon.png</normaloff>resource/icon.png</iconset>
+    <normaloff>resource/app_icon.png</normaloff>resource/app_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -356,7 +356,7 @@
       <property name="title">
        <string>설정</string>
       </property>
-      <widget class="QGroupBox" name="settingNotifyWarningGroup">
+      <widget class="QGroupBox" name="settingWarnGroup">
        <property name="geometry">
         <rect>
          <x>20</x>
@@ -368,7 +368,7 @@
        <property name="title">
         <string/>
        </property>
-       <widget class="QPushButton" name="notifyWarningButton">
+       <widget class="QPushButton" name="settingWarnButton">
         <property name="geometry">
          <rect>
           <x>460</x>
@@ -395,7 +395,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QLabel" name="notifyWarningTitle">
+       <widget class="QLabel" name="settingWarnTitle">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -415,7 +415,7 @@
          <string>거북목 경고</string>
         </property>
        </widget>
-       <widget class="QLabel" name="notifyWarningComment">
+       <widget class="QLabel" name="settingWarnComment">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -434,7 +434,7 @@
         </property>
        </widget>
       </widget>
-      <widget class="QGroupBox" name="settingNotifyStatGroup">
+      <widget class="QGroupBox" name="settingStatGroup">
        <property name="geometry">
         <rect>
          <x>20</x>
@@ -446,7 +446,7 @@
        <property name="title">
         <string/>
        </property>
-       <widget class="QPushButton" name="notifyStatButton">
+       <widget class="QPushButton" name="settingStatButton">
         <property name="geometry">
          <rect>
           <x>460</x>
@@ -473,7 +473,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QLabel" name="notifyStatComment">
+       <widget class="QLabel" name="settingStatComment">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -491,7 +491,7 @@
          <string>일정 주기로 통계 알림을 보냅니다.</string>
         </property>
        </widget>
-       <widget class="QLabel" name="notifyStatTitle">
+       <widget class="QLabel" name="settingStatTitle">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -511,7 +511,7 @@
          <string>통계 알림</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="notifyStatCycle">
+       <widget class="QComboBox" name="settingStatCycle">
         <property name="geometry">
          <rect>
           <x>360</x>
@@ -527,12 +527,7 @@
         </property>
         <item>
          <property name="text">
-          <string>10분</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>20분</string>
+          <string>15분</string>
          </property>
         </item>
         <item>
@@ -547,7 +542,7 @@
         </item>
         <item>
          <property name="text">
-          <string/>
+          <string>3시간</string>
          </property>
         </item>
        </widget>
@@ -564,7 +559,7 @@
        <property name="title">
         <string/>
        </property>
-       <widget class="QPushButton" name="recordButton">
+       <widget class="QPushButton" name="settingRecordButton">
         <property name="geometry">
          <rect>
           <x>460</x>
@@ -591,7 +586,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QLabel" name="recordComment">
+       <widget class="QLabel" name="settingRecordComment">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -609,7 +604,7 @@
          <string>일정 기간 동안의 거북목 사진 및 결과값을 기록합니다.</string>
         </property>
        </widget>
-       <widget class="QLabel" name="recordTitle">
+       <widget class="QLabel" name="settingRecordTitle">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -629,7 +624,7 @@
          <string>기록</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="recordCycle">
+       <widget class="QComboBox" name="settingRecordCycle">
         <property name="geometry">
          <rect>
           <x>360</x>
@@ -645,27 +640,22 @@
         </property>
         <item>
          <property name="text">
-          <string>30분</string>
+          <string>1일</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>1시간</string>
+          <string>7일</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>2시간</string>
+          <string>30일</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>4시간</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6시간</string>
+          <string>180일</string>
          </property>
         </item>
        </widget>

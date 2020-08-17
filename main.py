@@ -1,14 +1,15 @@
 import sys
+import traceback
 
-import cv2
 import requests
 from PyQt5 import uic
 from PyQt5.QtCore import (QBuffer, QEvent, QObject, QRect, QRunnable, Qt,
                           QThreadPool, QTimer, pyqtSignal, pyqtSlot)
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QFont, QImage, QPixmap
 from PyQt5.QtMultimedia import QCamera, QCameraImageCapture, QCameraInfo
 from PyQt5.QtMultimediaWidgets import QCameraViewfinder
 from PyQt5.QtWidgets import QApplication
+
 
 Form, Window = uic.loadUiType('dialog.ui')
 
@@ -31,28 +32,6 @@ def clickable(widget):
     return filter.clicked
 
 
-# ui에 전처리된 이미지 실시간으로 적용
-def update_image(cv_img):
-    qt_img = convert_cv_qt(cv_img)
-    ui.cam_image.setPixmap(qt_img)
-
-
-# 가져온 실시간 이미지를 QLabel에 적용하기위한 전처리 함수
-def convert_cv_qt(cv_img):
-    rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
-    heigth, width, ch = rgb_image.shape
-    bytes_per_line = ch * width
-    convert_to_Qt_format = QImage(rgb_image.data, width, heigth, bytes_per_line, QImage.Format_RGB888)
-    p = convert_to_Qt_format.scaled(640, 480, Qt.KeepAspectRatio)
-    return QPixmap.fromImage(p)
-
-
-def upload_image_api(img_bytes: bytes, *, s: requests.Session = requests.session()) -> requests.Response:
-    url = 'http://api.ihunch.koyo.io/upload'
-    files = {'file': img_bytes}
-    return s.post(url, files=files)
-
-
 def qimage_to_bytes(qimg: QImage) -> bytes:
     buffer = QBuffer()
     buffer.open(QBuffer.ReadWrite)
@@ -63,20 +42,53 @@ def qimage_to_bytes(qimg: QImage) -> bytes:
         buffer.close()
 
 
+def upload_image_api(img_bytes: bytes, *, s: requests.Session = requests.session()) -> requests.Response:
+    url = 'http://api.ihunch.koyo.io/upload'
+    files = {'file': img_bytes}
+    return s.post(url, files=files)
+
+
+def upload_image(qimg: QImage) -> requests.Response:
+    # timestamp = datetime.now().strftime('%Y-%m-%d-%H_%M_%S')
+    img_bytes = qimage_to_bytes(qimg)
+    return upload_image_api(img_bytes)
+
+
+def get_status_font():
+    font = QFont()
+    font.setFamily('나눔바른고딕')
+    font.setPointSize(50)
+    font.setBold(True)
+    font.setWeight(50)
+    return font
+
+
+class WorkerSignals(QObject):
+    finished = pyqtSignal()
+    error = pyqtSignal(tuple)
+    result = pyqtSignal(object)
+
+
 class Worker(QRunnable):
     def __init__(self, fn, *args, **kwargs):
         super().__init__()
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
+        self.signals = WorkerSignals()
 
     @pyqtSlot()
     def run(self):
-        self.fn(*self.args, **self.kwargs)
-
-
-class WorkerSignals(QObject):
-    pass
+        try:
+            result = self.fn(*self.args, **self.kwargs)
+        except:
+            traceback.print_exc()
+            exctype, value = sys.exc_info()[:2]
+            self.signals.error.emit((exctype, value, traceback.format_exc()))
+        else:
+            self.signals.result.emit(result)
+        finally:
+            self.signals.finished.emit()
 
 
 class MyWindow(Window, Form):
@@ -102,8 +114,7 @@ class MyWindow(Window, Form):
 
         # camera, capture, timer
         self.available_cameras = QCameraInfo.availableCameras()
-        self.camera = self.setup_camera(
-            self.available_cameras, 0) if self.available_cameras else None
+        self.camera = self.setup_camera(self.available_cameras, 0) if self.available_cameras else None
         self.capture = self.setup_capture(self.camera) if self.camera else None
         self.timer = self.setup_timer(self.capture) if self.capture else None
         if self.camera is not None:
@@ -113,10 +124,8 @@ class MyWindow(Window, Form):
         self.threadpool = QThreadPool()
 
         # connect other widgets
-        self.cameraButton.toggled.connect(
-            lambda toggle: self.cameraButton.setText('정지' if toggle else '시작'))
-        self.cameraButton.toggled.connect(
-            lambda toggle: self.start_timer_with_check() if toggle else self.stop_timer())
+        self.cameraButton.toggled.connect(lambda toggle: self.cameraButton.setText('정지' if toggle else '시작'))
+        self.cameraButton.toggled.connect(lambda toggle: self.start_timer_with_check() if toggle else self.stop_timer())
 
     def setup_camera(self, cameras: list, i: int) -> QCamera:
         camera = QCamera(cameras[i])
@@ -174,16 +183,38 @@ class MyWindow(Window, Form):
             self.cameraButton.setChecked(False)
 
     def upload_image_async(self, id: int, qimg: QImage) -> None:
-        def upload_image(qimg):
-            # timestamp = datetime.now().strftime('%Y-%m-%d-%H_%M_%S')
-            img_bytes = qimage_to_bytes(qimg)
-            r = upload_image_api(img_bytes)
-            print(r.status_code, r.text)
+        def display_result(resp: requests.Response) -> None:
+            if resp.status_code != 200:
+                return
+            r = resp.json()
+            if not r['human']:
+                text = '자리비움'
+                color = 'FF971E'
+            elif r['pred'] <= 0.5:
+                text = '정상 ({:.4f})'.format(r['pred'])
+                color = '23F200'
+            else:
+                text = '거북목 ({:.4f})'.format(r['pred'])
+                color = 'FF0000'
+            self.cameraStatusBar.setFont(get_status_font())
+            self.cameraStatusBar.setText(text)
+            self.cameraStatusBar.setAlignment(Qt.AlignCenter)
+            self.cameraStatusBar.setStyleSheet(
+                'color: black; background-color: #{}; border-style: solid;'.format(color))
+
         worker = Worker(upload_image, qimg)
+        worker.signals.result.connect(lambda r: display_result(r))
         self.threadpool.start(worker)
 
     def handle_error_camera_capture(self, *args) -> None:
         self.cameraButton.setChecked(False)
+
+    def init_setting(self):
+        self.settingWarnButton.setChecked(True)
+        self.settingStatButton.setChecked(True)
+        self.settingStatCycle.setCurrentIndex(0)
+        self.settingRecordButton.setChecked(True)
+        self.settingRecordCycle.setCurrentIndex(0)
 
 
 def main():
