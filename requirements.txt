@@ -1,3 +1,4 @@
 filelock==3.0.12
 PyQt5==5.15.0
 requests==2.24.0
+zroya==0.2.4
