@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>687</width>
-    <height>707</height>
+    <width>638</width>
+    <height>658</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="font">
    <font>
@@ -26,18 +38,36 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>2</x>
-      <y>2</y>
-      <width>685</width>
-      <height>704</height>
+      <x>-2</x>
+      <y>-1</y>
+      <width>644</width>
+      <height>662</height>
      </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
     <property name="iconSize">
      <size>
-      <width>118</width>
+      <width>108</width>
       <height>30</height>
      </size>
     </property>
@@ -45,6 +75,24 @@
      <bool>false</bool>
     </property>
     <widget class="QWidget" name="cameraWidget">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <attribute name="icon">
       <iconset>
        <normaloff>resource/realtime_icon.png</normaloff>resource/realtime_icon.png</iconset>
@@ -55,11 +103,17 @@
      <widget class="QLabel" name="cameraImage">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>110</y>
-        <width>641</width>
-        <height>481</height>
+        <x>-1</x>
+        <y>71</y>
+        <width>640</width>
+        <height>480</height>
        </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="frameShape">
        <enum>QFrame::Panel</enum>
@@ -71,24 +125,49 @@
      <widget class="QLabel" name="cameraStatusBar">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>641</width>
-        <height>91</height>
+        <x>-1</x>
+        <y>-1</y>
+        <width>640</width>
+        <height>73</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>30</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="frameShape">
        <enum>QFrame::Panel</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <widget class="QPushButton" name="cameraButton">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>590</y>
-        <width>641</width>
-        <height>61</height>
+        <x>-3</x>
+        <y>549</y>
+        <width>644</width>
+        <height>73</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>644</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>644</width>
+        <height>16777215</height>
+       </size>
       </property>
       <property name="font">
        <font>
@@ -100,11 +179,23 @@
       <property name="contextMenuPolicy">
        <enum>Qt::PreventContextMenu</enum>
       </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="text">
        <string>시작</string>
       </property>
       <property name="checkable">
        <bool>true</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
       </property>
       <property name="flat">
        <bool>true</bool>
@@ -112,6 +203,9 @@
      </widget>
     </widget>
     <widget class="QWidget" name="statWidget">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <attribute name="icon">
       <iconset>
        <normaloff>resource/ratio_icon.png</normaloff>resource/ratio_icon.png</iconset>
@@ -124,23 +218,56 @@
        <rect>
         <x>-2</x>
         <y>-2</y>
-        <width>684</width>
-        <height>663</height>
+        <width>644</width>
+        <height>625</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="tabPosition">
        <enum>QTabWidget::South</enum>
       </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
-        <width>168</width>
+        <width>154</width>
         <height>30</height>
        </size>
       </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
       <property name="usesScrollButtons">
+       <bool>false</bool>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="movable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
        <bool>false</bool>
       </property>
       <widget class="QWidget" name="statWidget1">
@@ -154,10 +281,10 @@
        <widget class="QLabel" name="statStatusBar1">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>20</y>
-          <width>641</width>
-          <height>91</height>
+          <x>-1</x>
+          <y>-1</y>
+          <width>640</width>
+          <height>73</height>
          </rect>
         </property>
         <property name="frameShape">
@@ -167,11 +294,14 @@
        <widget class="QLabel" name="statImage1">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>110</y>
-          <width>641</width>
-          <height>481</height>
+          <x>-1</x>
+          <y>71</y>
+          <width>640</width>
+          <height>480</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
@@ -189,10 +319,10 @@
        <widget class="QLabel" name="statStatusBar2">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>20</y>
-          <width>641</width>
-          <height>91</height>
+          <x>-1</x>
+          <y>-1</y>
+          <width>640</width>
+          <height>73</height>
          </rect>
         </property>
         <property name="frameShape">
@@ -202,11 +332,14 @@
        <widget class="QLabel" name="statImage2">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>110</y>
-          <width>641</width>
-          <height>481</height>
+          <x>-1</x>
+          <y>71</y>
+          <width>640</width>
+          <height>480</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
@@ -224,11 +357,14 @@
        <widget class="QLabel" name="statImage3">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>110</y>
-          <width>641</width>
-          <height>481</height>
+          <x>-1</x>
+          <y>71</y>
+          <width>640</width>
+          <height>480</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
@@ -237,10 +373,10 @@
        <widget class="QLabel" name="statStatusBar3">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>20</y>
-          <width>641</width>
-          <height>91</height>
+          <x>-1</x>
+          <y>-1</y>
+          <width>640</width>
+          <height>73</height>
          </rect>
         </property>
         <property name="frameShape">
@@ -261,10 +397,10 @@
      <widget class="QLabel" name="photoStatusBar">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>641</width>
-        <height>91</height>
+        <x>-1</x>
+        <y>-1</y>
+        <width>640</width>
+        <height>73</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -274,11 +410,17 @@
      <widget class="QLabel" name="photoImage">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>110</y>
-        <width>641</width>
-        <height>481</height>
+        <x>-1</x>
+        <y>71</y>
+        <width>640</width>
+        <height>480</height>
        </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="frameShape">
        <enum>QFrame::Panel</enum>
@@ -287,10 +429,10 @@
      <widget class="QPushButton" name="photoLeftButton">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>600</y>
-        <width>51</width>
-        <height>51</height>
+        <x>171</x>
+        <y>560</y>
+        <width>49</width>
+        <height>49</height>
        </rect>
       </property>
       <property name="icon">
@@ -299,21 +441,21 @@
       </property>
       <property name="iconSize">
        <size>
-        <width>50</width>
-        <height>70</height>
+        <width>48</width>
+        <height>48</height>
        </size>
       </property>
       <property name="flat">
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="photoLightButton">
+     <widget class="QPushButton" name="photoRightButton">
       <property name="geometry">
        <rect>
-        <x>430</x>
-        <y>600</y>
-        <width>51</width>
-        <height>51</height>
+        <x>420</x>
+        <y>560</y>
+        <width>50</width>
+        <height>49</height>
        </rect>
       </property>
       <property name="icon">
@@ -322,8 +464,8 @@
       </property>
       <property name="iconSize">
        <size>
-        <width>50</width>
-        <height>70</height>
+        <width>48</width>
+        <height>48</height>
        </size>
       </property>
       <property name="flat">
@@ -342,10 +484,10 @@
      <widget class="QGroupBox" name="settingGroup">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>12</y>
+        <x>-1</x>
+        <y>10</y>
         <width>640</width>
-        <height>607</height>
+        <height>611</height>
        </rect>
       </property>
       <property name="font">
@@ -371,9 +513,9 @@
        <widget class="QPushButton" name="settingWarnButton">
         <property name="geometry">
          <rect>
-          <x>460</x>
-          <y>30</y>
-          <width>129</width>
+          <x>467</x>
+          <y>37</y>
+          <width>121</width>
           <height>21</height>
          </rect>
         </property>
@@ -449,9 +591,9 @@
        <widget class="QPushButton" name="settingStatButton">
         <property name="geometry">
          <rect>
-          <x>460</x>
-          <y>30</y>
-          <width>129</width>
+          <x>468</x>
+          <y>37</y>
+          <width>121</width>
           <height>21</height>
          </rect>
         </property>
@@ -515,7 +657,7 @@
         <property name="geometry">
          <rect>
           <x>360</x>
-          <y>30</y>
+          <y>37</y>
           <width>76</width>
           <height>21</height>
          </rect>
@@ -562,9 +704,9 @@
        <widget class="QPushButton" name="settingRecordButton">
         <property name="geometry">
          <rect>
-          <x>460</x>
-          <y>30</y>
-          <width>129</width>
+          <x>468</x>
+          <y>37</y>
+          <width>121</width>
           <height>21</height>
          </rect>
         </property>
@@ -628,7 +770,7 @@
         <property name="geometry">
          <rect>
           <x>360</x>
-          <y>30</y>
+          <y>37</y>
           <width>76</width>
           <height>22</height>
          </rect>
@@ -659,42 +801,6 @@
          </property>
         </item>
        </widget>
-      </widget>
-      <widget class="QPushButton" name="settingApplyButton">
-       <property name="geometry">
-        <rect>
-         <x>460</x>
-         <y>400</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>적용</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="settingInitButton">
-       <property name="geometry">
-        <rect>
-         <x>540</x>
-         <y>400</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>초기화</string>
-       </property>
       </widget>
      </widget>
     </widget>
