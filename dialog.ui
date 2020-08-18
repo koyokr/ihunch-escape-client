@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>638</width>
-    <height>658</height>
+    <width>639</width>
+    <height>653</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>0</height>
+    <width>639</width>
+    <height>653</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>16777215</width>
-    <height>16777215</height>
+    <width>639</width>
+    <height>653</height>
    </size>
   </property>
   <property name="font">
@@ -38,40 +38,66 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>-2</x>
-      <y>-1</y>
-      <width>644</width>
-      <height>662</height>
+      <x>0</x>
+      <y>0</y>
+      <width>639</width>
+      <height>653</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>0</width>
-      <height>0</height>
+      <width>639</width>
+      <height>653</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>16777215</width>
-      <height>16777215</height>
+      <width>639</width>
+      <height>653</height>
      </size>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">QTabBar {                                          
+            background: #e2effa;                         
+            color: black                                                          
+        }                                                                                                                              
+        QTabBar::tab:selected {                            
+            background: #f6fafe;                                         
+        }                                                                                                   
+        QTabBar::tab {                  
+            background: #bfd6e8;                         
+            color: #000000;
+			border-width: 1px;
+			border-style: solid;
+			border-color: #b2c7d7;
+		}
+QTabWidget::pane{
+		background-color: #f6fafe;
+		border-radius: 10px;
+}</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="iconSize">
      <size>
-      <width>108</width>
+      <width>117</width>
       <height>30</height>
      </size>
     </property>
     <property name="usesScrollButtons">
+     <bool>false</bool>
+    </property>
+    <property name="tabsClosable">
      <bool>false</bool>
     </property>
     <widget class="QWidget" name="cameraWidget">
@@ -105,8 +131,8 @@
        <rect>
         <x>-1</x>
         <y>71</y>
-        <width>640</width>
-        <height>480</height>
+        <width>641</width>
+        <height>481</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -127,12 +153,13 @@
        <rect>
         <x>-1</x>
         <y>-1</y>
-        <width>640</width>
+        <width>641</width>
         <height>73</height>
        </rect>
       </property>
       <property name="font">
        <font>
+        <family>나눔바른고딕</family>
         <pointsize>30</pointsize>
         <weight>75</weight>
         <bold>true</bold>
@@ -151,26 +178,27 @@
      <widget class="QPushButton" name="cameraButton">
       <property name="geometry">
        <rect>
-        <x>-3</x>
-        <y>549</y>
-        <width>644</width>
+        <x>-2</x>
+        <y>550</y>
+        <width>643</width>
         <height>73</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
-        <width>644</width>
+        <width>0</width>
         <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>644</width>
+        <width>16777215</width>
         <height>16777215</height>
        </size>
       </property>
       <property name="font">
        <font>
+        <family>나눔바른고딕</family>
         <pointsize>30</pointsize>
         <weight>75</weight>
         <bold>true</bold>
@@ -216,10 +244,10 @@
      <widget class="QTabWidget" name="statTabWidget">
       <property name="geometry">
        <rect>
-        <x>-2</x>
-        <y>-2</y>
-        <width>644</width>
-        <height>625</height>
+        <x>0</x>
+        <y>0</y>
+        <width>641</width>
+        <height>621</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -234,6 +262,13 @@
         <height>16777215</height>
        </size>
       </property>
+      <property name="font">
+       <font>
+        <family>나눔바른고딕</family>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -244,11 +279,11 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
-        <width>154</width>
+        <width>163</width>
         <height>30</height>
        </size>
       </property>
@@ -283,9 +318,16 @@
          <rect>
           <x>-1</x>
           <y>-1</y>
-          <width>640</width>
+          <width>641</width>
           <height>73</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>나눔바른고딕</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
@@ -296,8 +338,8 @@
          <rect>
           <x>-1</x>
           <y>71</y>
-          <width>640</width>
-          <height>480</height>
+          <width>641</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -321,9 +363,16 @@
          <rect>
           <x>-1</x>
           <y>-1</y>
-          <width>640</width>
+          <width>641</width>
           <height>73</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>나눔바른고딕</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
@@ -334,8 +383,8 @@
          <rect>
           <x>-1</x>
           <y>71</y>
-          <width>640</width>
-          <height>480</height>
+          <width>641</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -359,8 +408,8 @@
          <rect>
           <x>-1</x>
           <y>71</y>
-          <width>640</width>
-          <height>480</height>
+          <width>641</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -375,9 +424,16 @@
          <rect>
           <x>-1</x>
           <y>-1</y>
-          <width>640</width>
+          <width>641</width>
           <height>73</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>나눔바른고딕</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
@@ -399,12 +455,23 @@
        <rect>
         <x>-1</x>
         <y>-1</y>
-        <width>640</width>
+        <width>641</width>
         <height>73</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>나눔바른고딕</family>
+        <pointsize>30</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="frameShape">
        <enum>QFrame::Panel</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="photoImage">
@@ -412,8 +479,8 @@
        <rect>
         <x>-1</x>
         <y>71</y>
-        <width>640</width>
-        <height>480</height>
+        <width>641</width>
+        <height>481</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -429,7 +496,7 @@
      <widget class="QPushButton" name="photoLeftButton">
       <property name="geometry">
        <rect>
-        <x>171</x>
+        <x>170</x>
         <y>560</y>
         <width>49</width>
         <height>49</height>
@@ -452,9 +519,9 @@
      <widget class="QPushButton" name="photoRightButton">
       <property name="geometry">
        <rect>
-        <x>420</x>
+        <x>416</x>
         <y>560</y>
-        <width>50</width>
+        <width>49</width>
         <height>49</height>
        </rect>
       </property>
@@ -484,15 +551,18 @@
      <widget class="QGroupBox" name="settingGroup">
       <property name="geometry">
        <rect>
-        <x>-1</x>
+        <x>0</x>
         <y>10</y>
-        <width>640</width>
+        <width>639</width>
         <height>611</height>
        </rect>
       </property>
       <property name="font">
        <font>
+        <family>나눔바른고딕</family>
         <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="title">
@@ -514,15 +584,15 @@
         <property name="geometry">
          <rect>
           <x>467</x>
-          <y>37</y>
+          <y>43</y>
           <width>121</width>
           <height>21</height>
          </rect>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>resource/off_button_test.png</normaloff>
-          <normalon>resource/on_button_test.png</normalon>resource/off_button_test.png</iconset>
+          <normaloff>resource/off_button.png</normaloff>
+          <normalon>resource/on_button.png</normalon>resource/off_button.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -548,7 +618,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>나눔바른고딕</family>
+          <pointsize>13</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -561,14 +632,17 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>30</y>
+          <y>33</y>
           <width>321</width>
           <height>41</height>
          </rect>
         </property>
         <property name="font">
          <font>
+          <family>나눔바른고딕</family>
           <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -592,15 +666,15 @@
         <property name="geometry">
          <rect>
           <x>468</x>
-          <y>37</y>
+          <y>43</y>
           <width>121</width>
           <height>21</height>
          </rect>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>resource/off_button_test.png</normaloff>
-          <normalon>resource/on_button_test.png</normalon>resource/off_button_test.png</iconset>
+          <normaloff>resource/off_button.png</normaloff>
+          <normalon>resource/on_button.png</normalon>resource/off_button.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -619,14 +693,17 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>30</y>
+          <y>33</y>
           <width>321</width>
           <height>41</height>
          </rect>
         </property>
         <property name="font">
          <font>
+          <family>나눔바른고딕</family>
           <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -644,7 +721,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>나눔바른고딕</family>
+          <pointsize>13</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -657,7 +735,7 @@
         <property name="geometry">
          <rect>
           <x>360</x>
-          <y>37</y>
+          <y>43</y>
           <width>76</width>
           <height>21</height>
          </rect>
@@ -665,6 +743,8 @@
         <property name="font">
          <font>
           <pointsize>9</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <item>
@@ -705,15 +785,15 @@
         <property name="geometry">
          <rect>
           <x>468</x>
-          <y>37</y>
+          <y>43</y>
           <width>121</width>
           <height>21</height>
          </rect>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>resource/off_button_test.png</normaloff>
-          <normalon>resource/on_button_test.png</normalon>resource/off_button_test.png</iconset>
+          <normaloff>resource/off_button.png</normaloff>
+          <normalon>resource/on_button.png</normalon>resource/off_button.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -732,14 +812,17 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>30</y>
+          <y>33</y>
           <width>321</width>
           <height>41</height>
          </rect>
         </property>
         <property name="font">
          <font>
+          <family>나눔바른고딕</family>
           <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -757,7 +840,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>나눔바른고딕</family>
+          <pointsize>13</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -770,7 +854,7 @@
         <property name="geometry">
          <rect>
           <x>360</x>
-          <y>37</y>
+          <y>43</y>
           <width>76</width>
           <height>22</height>
          </rect>
@@ -778,6 +862,8 @@
         <property name="font">
          <font>
           <pointsize>9</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <item>

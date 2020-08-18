@@ -61,13 +61,13 @@ def upload_image_save_record(qimg: QImage) -> RecordType:
     return record
 
 
-def get_status_font() -> QFont:
-    font = QFont()
-    font.setFamily('나눔바른고딕')
-    font.setPointSize(50)
-    font.setBold(True)
-    font.setWeight(50)
-    return font
+# def get_status_font() -> QFont:
+#     font = QFont()
+#     font.setFamily('나눔바른고딕')
+#     font.setPointSize(30)
+#     font.setBold(True)
+#     font.setWeight(50)
+#     return font
 
 
 class RecordsDriver:
@@ -196,7 +196,7 @@ class MyWindow(Window, Form):
 
         # viewfinder
         self.cameraViewfinder = QCameraViewfinder(self.cameraWidget)
-        self.cameraViewfinder.setGeometry(QRect(0, 73, 641, 481))
+        self.cameraViewfinder.setGeometry(QRect(0, 71, 641, 481))
         self.cameraViewfinder.setObjectName('cameraViewfinder')
         # available_cameras, camera, capture
         self.available_cameras = QCameraInfo.availableCameras()
@@ -329,10 +329,10 @@ class MyWindow(Window, Form):
             text += f' ({ihunch:.4f})'
         else:
             text, color = '자리비움', 'FF971E'
-        statusbar.setFont(get_status_font())
+        # statusbar.setFont(get_status_font())
         statusbar.setText(text)
         statusbar.setAlignment(Qt.AlignCenter)
-        statusbar.setStyleSheet(f'color: #{color}; border-style: solid;')
+        statusbar.setStyleSheet(f'color: #{color};')
 
 
 def main():
