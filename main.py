@@ -1,11 +1,12 @@
 import json
 import sys
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Callable, Dict, Iterable, List, Optional, Union
 
 import requests
+import zroya
 from filelock import FileLock
 from PyQt5 import uic
 from PyQt5.QtCore import (QBuffer, QObject, QRect, QRunnable, Qt, QThreadPool,
@@ -45,12 +46,10 @@ def upload_image_api(bimg: bytes, *, s: requests.Session = requests.session()) -
 def upload_image_save_record(qimg: QImage) -> RecordType:
     bimg = qimage_to_bytes(qimg)
     r = upload_image_api(bimg)
-
     timestamp = datetime.now().strftime(DATETIME_FORMAT)
     photo = PHOTOS_DIR / f'{timestamp}.jpg'
     with photo.open('wb') as f:
         f.write(bimg)
-
     success = r.status_code == requests.codes.ok
     record = RecordsDriver.create(timestamp, success, False, 0.0)
     if success:
@@ -118,7 +117,7 @@ class SettingsDriver:
 
     @staticmethod
     def _initialized() -> SettingsType:
-        return {'warn': True, 'stat': True, 'record': True, 'stat_cycle': 0, 'record_cycle': 0}
+        return {'warn': True, 'stat': True, 'record': True, 'stat_index': 0, 'record_index': 0}
 
     @classmethod
     def _load(cls) -> SettingsType:
@@ -150,6 +149,42 @@ class SettingsDriver:
             return settings
 
 
+class Notifier:
+    __slots__ = ['_t', '_nid']
+    _ = None
+
+    def __init__(self, acts: Iterable[str] = []):
+        if __class__._ is None:
+            __class__._ = zroya.init('iHunch Escape No. 1', 'is119', 'ihunch-escape', 'client', '0.1.0-dev')
+        self._t = zroya.Template(zroya.TemplateType.Text4)
+        for act in acts:
+            self._t.addAction(act)
+        self._nid = None
+
+    def notify(self, line1: str, line2: str, attr: Optional[str] = None,
+               on_click: Optional[Callable] = None, on_action: Optional[Callable] = None,
+               on_dismiss: Optional[Callable] = None, on_fail: Optional[Callable] = None) -> None:
+        self._t.setFirstLine(line1)
+        self._t.setSecondLine(line2)
+        if attr is not None:
+            self._t.setAttribution(attr)
+        self._nid = zroya.show(self._t, on_click, on_action, on_dismiss, on_fail)
+
+    def hide(self) -> None:
+        if self._nid is not None:
+            zroya.hide(self._nid)
+
+    @staticmethod
+    def create_notifier(first_line: str, second_line: str, attribution: str, actions: list) -> zroya.Template:
+        t = zroya.Template(zroya.TemplateType.Text4)
+        t.setFirstLine(first_line)
+        t.setSecondLine(second_line)
+        t.setAttribution(attribution)
+        for action in actions:
+            t.addAction(action)
+        return t
+
+
 class WorkerSignals(QObject):
     finished = pyqtSignal()
     error = pyqtSignal(tuple)
@@ -157,6 +192,8 @@ class WorkerSignals(QObject):
 
 
 class Worker(QRunnable):
+    __slots__ = ['fn', 'args', 'kwargs', 'signals']
+
     def __init__(self, fn, *args, **kwargs):
         super().__init__()
         self.fn = fn
@@ -180,122 +217,108 @@ class Worker(QRunnable):
 
 class MyWindow(Window, Form):
     __slots__ = [
-        'cameraViewfinder',
-        'available_cameras',
-        'camera',
-        'capture',
-        'timer',
         'threadpool',
         'pixmap',
+        'cameraViewfinder',
+        'camera',
+        'capture',
+        'capture_timer',
         'photo_timestamp',
+        'warn_notifier',
+        'warn_notifier_timer',
+        'stat_notifier',
+        'stat_notifier_timer',
     ]
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
-        # viewfinder
+        # threadpool, pixmap
+        self.threadpool = QThreadPool()
+        self.pixmap = QPixmap()
+        # camera
         self.cameraViewfinder = QCameraViewfinder(self.cameraWidget)
         self.cameraViewfinder.setGeometry(QRect(0, 73, 641, 481))
         self.cameraViewfinder.setObjectName('cameraViewfinder')
-        # available_cameras, camera, capture
-        self.available_cameras = QCameraInfo.availableCameras()
-        self.camera = self.setup_camera(self.available_cameras, 0) if self.available_cameras else None
-        self.capture = self.setup_capture(self.camera) if self.camera else None
-        if self.camera is not None and self.camera.isAvailable():
-            self.camera.start()
-
-        # timer, threadpool, pixmap
-        self.timer = self.setup_timer()
-        self.threadpool = QThreadPool()
-        self.pixmap = QPixmap()
+        self.camera = None
+        self.capture = None
+        self.init_camera_and_capture()
+        self.capture_timer = self.create_timer(5_000, self.capture_safe)
+        # photo
         self.photo_timestamp = None
+        # setting
+        self.warn_notifier = Notifier(['확인'])
+        self.warn_notifier_timer = self.create_timer(60_000, self.notify_warn_if_bad)
+        self.stat_notifier = Notifier(['확인'])
+        self.stat_notifier_timer = self.create_timer(self.get_setting_stat_interval(), self.notify_stat)
+        # connect: camera
+        self.cameraButton.toggled.connect(self.toggle_all_timers)
+        # connect: stat
+        self.statTabWidget.tabBarClicked.connect(self.load_stat)
+        # connect: photo
+        self.tabWidget.tabBarClicked.connect(lambda index: self.load_stat(self.statTabWidget.currentIndex()) if index == 1 else
+                                                           self.load_photo() if index == 2 else None)
+        self.photoLeftButton.clicked.connect(lambda: self.load_photo(left=True))
+        self.photoRightButton.clicked.connect(lambda: self.load_photo(right=True))
+        # connect: setting
+        self.settingWarnButton.toggled.connect(self.toggle_warn_timer)
+        self.settingStatButton.toggled.connect(self.toggle_stat_timer)
+        self.settingStatCycle.currentIndexChanged.connect(lambda index: self.toggle_stat_timer(True))
 
-        # connect cameraButton
-        self.cameraButton.toggled.connect(lambda toggle: self.cameraButton.setText('정지' if toggle else '시작'))
-        self.cameraButton.toggled.connect(lambda toggle: self.start_timer_with_check() if toggle else self.stop_timer())
-        # connect photoLeftButton, photoRightButton
-        self.tabWidget.tabBarClicked.connect(lambda index: self.load_photo_display_status(init=True) if index == 2 else None)
-        self.photoLeftButton.clicked.connect(lambda: self.load_photo_display_status(left=True))
-        self.photoRightButton.clicked.connect(lambda: self.load_photo_display_status(right=True))
-
-    def setup_camera(self, cameras: list, i: int) -> QCamera:
-        camera = QCamera(cameras[i])
-        camera.setViewfinder(self.cameraViewfinder)
-        camera.setCaptureMode(QCamera.CaptureStillImage)
-        camera.error.connect(self.error_camera_or_capture)
-        return camera
-
-    def setup_capture(self, camera: QCamera) -> QCameraImageCapture:
-        capture = QCameraImageCapture(camera)
-        capture.setCaptureDestination(QCameraImageCapture.CaptureToBuffer)
-        capture.imageCaptured.connect(self.upload_image_display_status_async)
-        capture.error.connect(self.error_camera_or_capture)
-        return capture
-
-    def setup_timer(self) -> QTimer:
-        timer = QTimer()
-        timer.setInterval(5_000)
-        timer.timeout.connect(self.capture_with_check)
-        return timer
-
-    def resetup_camera_capture(self) -> bool:
-        self.available_cameras = QCameraInfo.availableCameras()
-        if not self.available_cameras:
+    def init_camera_and_capture(self) -> bool:
+        available_cameras = QCameraInfo.availableCameras()
+        if not available_cameras:
             return False
-        self.camera = self.setup_camera(self.available_cameras, 0)
-        self.camera.start()
-        self.capture = self.setup_capture(self.camera)
+        self.camera = self.create_camera(available_cameras, 0, self.cameraViewfinder, self.error_camera)
+        self.capture = self.create_capture(self.camera, self.process_image_threadpool, self.error_camera)
+        if self.camera.isAvailable():
+            self.camera.start()
         return True
 
-    def check_and_repair_capture(self) -> bool:
-        if self.camera is None and not self.resetup_camera_capture():
+    def check_camera(self) -> bool:
+        if (self.camera is None or not self.camera.isAvailable()) and not self.init_camera_and_capture():
             return False
         if not self.capture.isReadyForCapture():
-            if not self.camera.isAvailable() and not self.resetup_camera_capture():
-                return False
             self.camera.start()
         return True
 
-    def start_timer_with_check(self) -> None:
-        if self.check_and_repair_capture():
-            self.timer.start()
+    def start_capture_timer_safe(self) -> None:
+        if self.check_camera():
+            self.capture_timer.start()
         else:
-            self.cameraButton.setChecked(False)
+            self.error_camera()
 
-    def stop_timer(self) -> None:
-        if self.timer.isActive():
-            self.timer.stop()
-
-    def capture_with_check(self) -> None:
-        if self.check_and_repair_capture():
+    def capture_safe(self) -> None:
+        if self.check_camera():
             self.capture.capture()
         else:
-            self.cameraButton.setChecked(False)
+            self.error_camera()
 
-    def upload_image_display_status_async(self, id: int, qimg: QImage) -> None:
+    def error_camera(self, *args) -> None:
+        self.cameraButton.setChecked(False)
+
+    def get_setting_stat_interval(self) -> int:
+        text = self.settingStatCycle.currentText()
+        text = str(text).replace('시간', '').replace('분', '')
+        msec = int(text) * 3_600_000
+        return msec
+
+    def process_image_threadpool(self, id: int, qimg: QImage) -> None:
         def display_result(record: RecordType) -> None:
             if record['success']:
-                self.display_status(self.cameraStatusBar, record['human'], record['ihunch'])
+                self.display_ihunch_status(self.cameraStatusBar, record['human'], record['ihunch'])
         worker = Worker(upload_image_save_record, qimg)
         worker.signals.result.connect(display_result)
         self.threadpool.start(worker)
 
-    def error_camera_or_capture(self, *args) -> None:
-        self.cameraButton.setChecked(False)
-
-    def load_photo_display_status(self, *, init=False, left=False, right=False) -> None:
-        if init:
-            beg, end = None, None
-            index = -1
-        elif left:
-            beg, end = None, self.photo_timestamp
-            index = -1
+    def load_photo(self, left=False, right=False) -> None:
+        beg, end = None, None
+        index = -1
+        if left:
+            end = self.photo_timestamp
         elif right:
-            beg, end = self.photo_timestamp, None
+            beg = self.photo_timestamp
             index = 0
-        else:
-            raise Exception('load_photo_display_status: init, left, right are False')
         records = RecordsDriver.load(beg, end)
         if not records:
             return
@@ -303,24 +326,89 @@ class MyWindow(Window, Form):
         self.photo_timestamp = record['timestamp']
         self.pixmap.load(str(PHOTOS_DIR / f'{self.photo_timestamp}.jpg'))
         self.photoImage.setPixmap(self.pixmap)
-        self.display_status(self.photoStatusBar, record['human'], record['ihunch'])
+        self.display_ihunch_status(self.photoStatusBar, record['human'], record['ihunch'])
 
-    # def load_stat_async(self, index) -> None:
-    #     def fn(r) -> None:
-    #         pass
-    #     worker = Worker(upload_image_save_record, index)
-    #     worker.signals.result.connect(fn)
-    #     self.threadpool.start(worker)
+    def load_stat(self, index=0) -> None:
+        suffix = str(index + 1)
+        statImage = getattr(self, 'statImage' + suffix)
+        statusbar = getattr(self, 'statStatusBar' + suffix)
+        # self.pixmap.loadFromData(b'', 'jpg')
+        # statImage.setPixmap(self.pixmap)
+        # statusbar.setFont(get_status_font())
+        # statusbar.setText(text)
+        # statusbar.setAlignment(Qt.AlignCenter)
+        # statusbar.setStyleSheet(f'color: #{color}; border-style: solid;')
 
-    def init_setting(self):
-        self.settingWarnButton.setChecked(True)
-        self.settingStatButton.setChecked(True)
-        self.settingStatCycle.setCurrentIndex(0)
-        self.settingRecordButton.setChecked(True)
-        self.settingRecordCycle.setCurrentIndex(0)
+    def toggle_all_timers(self, toggle) -> None:
+        if toggle:
+            self.cameraButton.setText('정지')
+            self.start_capture_timer_safe()
+            if self.settingWarnButton.isChecked():
+                self.warn_notifier_timer.start()
+            if self.settingStatButton.isChecked():
+                self.stat_notifier_timer.setInterval(self.get_setting_stat_interval())
+                self.stat_notifier_timer.start()
+        else:
+            self.cameraButton.setText('시작')
+            self.capture_timer.stop()
+            self.warn_notifier_timer.stop()
+            self.stat_notifier_timer.stop()
+
+    def toggle_warn_timer(self, toggle) -> None:
+        if toggle and self.cameraButton.isChecked():
+            self.warn_notifier_timer.start()
+        else:
+            self.warn_notifier_timer.stop()
+
+    def toggle_stat_timer(self, toggle) -> None:
+        if toggle and self.cameraButton.isChecked():
+            self.stat_notifier_timer.setInterval(self.get_setting_stat_interval())
+            self.stat_notifier_timer.start()
+        else:
+            self.stat_notifier_timer.stop()
+
+    def notify_warn_if_bad(self) -> None:
+        minutes = 5
+        beg = datetime.now() - timedelta(seconds=minutes * 60)
+        records = RecordsDriver.load(beg.strftime(DATETIME_FORMAT))
+        stats = [x['ihunch'] > 0.5 for x in records if x['human']]
+        ihunch_percent = sum(stats) / len(stats) * 100
+        if ihunch_percent > 90:
+            self.warn_notifier.notify('거북목 경고', f'최근 {minutes}분 중에 거북목 자세 비중이 {ihunch_percent:.2f}%를 차지합니다!', '거북목 탈출 넘버원')
+
+    def notify_stat(self) -> None:
+        hours = self.stat_notifier_timer.interval() // 3_600_000
+        beg = datetime.now() - timedelta(seconds=hours * 3_600)
+        records = RecordsDriver.load(beg.strftime(DATETIME_FORMAT))
+        stats = [x['ihunch'] > 0.5 for x in records if x['human']]
+        ihunch_percent = sum(stats) / len(stats) * 100
+        self.stat_notifier.notify('최근 거북목 통계', f'최근 {hours}시간 중에 거북목 자세 비중이 {ihunch_percent:.2f}%를 차지했습니다.', '거북목 탈출 넘버원')
 
     @staticmethod
-    def display_status(statusbar: QLabel, human: bool, ihunch: float):
+    def create_camera(cameras: list, index: int, viewfinder: QCameraViewfinder, error: Callable) -> QCamera:
+        camera = QCamera(cameras[index])
+        camera.setViewfinder(viewfinder)
+        camera.setCaptureMode(QCamera.CaptureStillImage)
+        camera.error.connect(error)
+        return camera
+
+    @staticmethod
+    def create_capture(camera: QCamera, callback: Callable, error: Callable) -> QCameraImageCapture:
+        capture = QCameraImageCapture(camera)
+        capture.setCaptureDestination(QCameraImageCapture.CaptureToBuffer)
+        capture.imageCaptured.connect(callback)
+        capture.error.connect(error)
+        return capture
+
+    @staticmethod
+    def create_timer(interval: int, callback: Callable) -> QTimer:
+        timer = QTimer()
+        timer.setInterval(interval)
+        timer.timeout.connect(callback)
+        return timer
+
+    @staticmethod
+    def display_ihunch_status(statusbar: QLabel, human: bool, ihunch: float) -> None:
         if human:
             if ihunch > 0.5:
                 text, color = '거북목', 'FF0000'
