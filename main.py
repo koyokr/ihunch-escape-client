@@ -3,39 +3,29 @@ import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
+from typing import Dict, List, Optional, Union
 
 import requests
+from filelock import FileLock
 from PyQt5 import uic
-from PyQt5.QtCore import (QBuffer, QEvent, QObject, QRect, QRunnable, Qt,
-                          QThreadPool, QTimer, pyqtSignal, pyqtSlot)
-from PyQt5.QtGui import QFont, QImage
+from PyQt5.QtCore import (QBuffer, QObject, QRect, QRunnable, Qt, QThreadPool,
+                          QTimer, pyqtSignal, pyqtSlot)
+from PyQt5.QtGui import QFont, QImage, QPixmap
 from PyQt5.QtMultimedia import QCamera, QCameraImageCapture, QCameraInfo
 from PyQt5.QtMultimediaWidgets import QCameraViewfinder
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QLabel
 
 API_HOST = 'api.ihunch.koyo.io'
-DATETIME_FORMAT = '%Y-%m-%d-%H_%M_%S'
-DATA_DIR = Path(__file__).resolve(strict=True).parent / 'data'
+DATETIME_FORMAT = '%Y%m%d-%H%M%S'
+
+BASE_DIR = Path(__file__).resolve(strict=True).parent
+DATA_DIR = BASE_DIR / 'data'
+PHOTOS_DIR = BASE_DIR / 'photos'
+
+RecordType = Dict[str, Union[str, bool, float]]
+SettingsType = Dict[str, Union[bool, int]]
 
 Form, Window = uic.loadUiType('dialog.ui')
-
-
-def clickable(widget):
-    """탭바 클릭 이벤트 부여"""
-    class Filter(QObject):
-        clicked = pyqtSignal()  # pyside2 사용자는 pyqtSignal() -> Signal()로 변경
-
-        def eventFilter(self, obj, event):
-            if obj == widget:
-                if event.type() == QEvent.MouseButtonRelease:
-                    if obj.rect().contains(event.pos()):
-                        self.clicked.emit()
-                        # The developer can opt for .emit(obj) to get the object within the slot.
-                        return True
-            return False
-    filter = Filter(widget)
-    widget.installEventFilter(filter)
-    return filter.clicked
 
 
 def qimage_to_bytes(qimg: QImage) -> bytes:
@@ -48,30 +38,116 @@ def qimage_to_bytes(qimg: QImage) -> bytes:
         buffer.close()
 
 
-def upload_image_api(img_bytes: bytes, *, s: requests.Session = requests.session()) -> requests.Response:
-    url = f'http://{API_HOST}/upload'
-    files = {'file': img_bytes}
-    return s.post(url, files=files)
+def upload_image_api(bimg: bytes, *, s: requests.Session = requests.session()) -> requests.Response:
+    return s.post(f'http://{API_HOST}/upload', files={'file': bimg})
 
 
-def upload_image_save_result(qimg: QImage) -> requests.Response:
+def upload_image_save_record(qimg: QImage) -> RecordType:
+    bimg = qimage_to_bytes(qimg)
+    r = upload_image_api(bimg)
+
     timestamp = datetime.now().strftime(DATETIME_FORMAT)
-    img_bytes = qimage_to_bytes(qimg)
-    r = upload_image_api(img_bytes)
-    with open(DATA_DIR / f'{timestamp}.jpg', 'wb') as f:
-        f.write(img_bytes)
-    with open(DATA_DIR / f'{timestamp}.json', 'w') as f:
-        json.dump(r.json() if r.status_code == requests.codes.ok else {}, f)
-    return r
+    photo = PHOTOS_DIR / f'{timestamp}.jpg'
+    with photo.open('wb') as f:
+        f.write(bimg)
+
+    success = r.status_code == requests.codes.ok
+    record = RecordsDriver.create(timestamp, success, False, 0.0)
+    if success:
+        j = r.json()
+        record['human'] = j['human']
+        record['ihunch'] = j['pred']
+    RecordsDriver.append(record)
+    return record
 
 
-def get_status_font():
+def get_status_font() -> QFont:
     font = QFont()
     font.setFamily('나눔바른고딕')
     font.setPointSize(50)
     font.setBold(True)
     font.setWeight(50)
     return font
+
+
+class RecordsDriver:
+    _file = DATA_DIR / 'records.json'
+    _lock = FileLock(_file.parent / f'{_file.name}.lock')
+
+    @classmethod
+    def _load(cls) -> List[RecordType]:
+        try:
+            records = json.load(cls._file.open('r'))
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            records = []
+        return records
+
+    @classmethod
+    def _save(cls, records: List[RecordType]) -> None:
+        json.dump(records, cls._file.open('w'))
+
+    @classmethod
+    def load(cls, beg: str='', end: str='') -> List[RecordType]:
+        with cls._lock:
+            records = cls._load()
+        if not beg and not end:
+            pass
+        elif not beg:
+            records = [x for x in records if x['timestamp'] < end]
+        elif not end:
+            records = [x for x in records if beg < x['timestamp']]
+        else:
+            records = [x for x in records if beg < x['timestamp'] < end]
+        return records
+
+    @classmethod
+    def append(cls, record: RecordType) -> None:
+        with cls._lock:
+            records = cls._load()
+            records.append(record)
+            cls._save(records)
+
+    @staticmethod
+    def create(timestamp: str, success: bool, human: bool, ihunch: float) -> RecordType:
+        return {'timestamp': timestamp, 'success': success, 'human': human, 'ihunch': ihunch}
+
+
+class SettingsDriver:
+    _file = DATA_DIR / 'settings.json'
+    _lock = FileLock(_file.parent / f'{_file.name}.lock')
+
+    @staticmethod
+    def _initialized() -> SettingsType:
+        return {'warn': True, 'stat': True, 'record': True, 'stat_cycle': 0, 'record_cycle': 0}
+
+    @classmethod
+    def _load(cls) -> SettingsType:
+        try:
+            settings = json.load(cls._file.open('r'))
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            settings = cls._initialized()
+        return settings
+
+    @classmethod
+    def _save(cls, settings: SettingsType) -> None:
+        json.dump(settings, cls._file.open('w'))
+
+    @classmethod
+    def load(cls) -> SettingsType:
+        with cls._lock:
+            return cls._load()
+
+    @classmethod
+    def save(cls, settings: SettingsType) -> None:
+        with cls._lock:
+            cls._save(settings)
+
+    @classmethod
+    def init(cls) -> SettingsType:
+        with cls._lock:
+            settings = cls._initialized()
+            cls._save(settings)
+            return settings
 
 
 class WorkerSignals(QObject):
@@ -89,7 +165,7 @@ class Worker(QRunnable):
         self.signals = WorkerSignals()
 
     @pyqtSlot()
-    def run(self):
+    def run(self) -> None:
         try:
             result = self.fn(*self.args, **self.kwargs)
         except:
@@ -109,7 +185,9 @@ class MyWindow(Window, Form):
         'camera',
         'capture',
         'timer',
-        'threadpool'
+        'threadpool',
+        'pixmap',
+        'photo_timestamp'
     ]
 
     def __init__(self):
@@ -118,36 +196,41 @@ class MyWindow(Window, Form):
 
         # viewfinder
         self.cameraViewfinder = QCameraViewfinder(self.cameraWidget)
-        self.cameraViewfinder.setGeometry(QRect(20, 110, 641, 481))
+        self.cameraViewfinder.setGeometry(QRect(0, 73, 641, 481))
         self.cameraViewfinder.setObjectName('cameraViewfinder')
-
-        # camera, capture, timer
+        # available_cameras, camera, capture
         self.available_cameras = QCameraInfo.availableCameras()
         self.camera = self.setup_camera(self.available_cameras, 0) if self.available_cameras else None
         self.capture = self.setup_capture(self.camera) if self.camera else None
-        self.timer = self.setup_timer()
         if self.camera is not None:
             self.camera.start()
 
-        # threadpool
+        # timer, threadpool, pixmap
+        self.timer = self.setup_timer()
         self.threadpool = QThreadPool()
+        self.pixmap = QPixmap()
+        self.photo_timestamp = None
 
-        # connect other widgets
+        # connect cameraButton
         self.cameraButton.toggled.connect(lambda toggle: self.cameraButton.setText('정지' if toggle else '시작'))
         self.cameraButton.toggled.connect(lambda toggle: self.start_timer_with_check() if toggle else self.stop_timer())
+        # connect photoLeftButton, photoRightButton
+        self.tabWidget.tabBarClicked.connect(lambda index: self.load_photo_display_status(init=True) if index == 2 else None)
+        self.photoLeftButton.clicked.connect(lambda: self.load_photo_display_status(left=True))
+        self.photoRightButton.clicked.connect(lambda: self.load_photo_display_status(right=True))
 
     def setup_camera(self, cameras: list, i: int) -> QCamera:
         camera = QCamera(cameras[i])
         camera.setViewfinder(self.cameraViewfinder)
         camera.setCaptureMode(QCamera.CaptureStillImage)
-        camera.error.connect(self.handle_error_camera_capture)
+        camera.error.connect(self.error_camera_or_capture)
         return camera
 
     def setup_capture(self, camera: QCamera) -> QCameraImageCapture:
         capture = QCameraImageCapture(camera)
         capture.setCaptureDestination(QCameraImageCapture.CaptureToBuffer)
-        capture.imageCaptured.connect(self.upload_image_async)
-        capture.error.connect(self.handle_error_camera_capture)
+        capture.imageCaptured.connect(self.upload_image_display_status_async)
+        capture.error.connect(self.error_camera_or_capture)
         return capture
 
     def setup_timer(self) -> QTimer:
@@ -190,31 +273,44 @@ class MyWindow(Window, Form):
         else:
             self.cameraButton.setChecked(False)
 
-    def upload_image_async(self, id: int, qimg: QImage) -> None:
-        def display_result(resp: requests.Response) -> None:
-            if resp.status_code != 200:
-                return
-            r = resp.json()
-            if not r['human']:
-                text = '자리비움'
-                color = 'FF971E'
-            elif r['pred'] <= 0.5:
-                text = '정상 ({:.4f})'.format(r['pred'])
-                color = '23F200'
-            else:
-                text = '거북목 ({:.4f})'.format(r['pred'])
-                color = 'FF0000'
-            self.cameraStatusBar.setFont(get_status_font())
-            self.cameraStatusBar.setText(text)
-            self.cameraStatusBar.setAlignment(Qt.AlignCenter)
-            self.cameraStatusBar.setStyleSheet(f'color: black; background-color: #{color}; border-style: solid;')
-
-        worker = Worker(upload_image_save_result, qimg)
+    def upload_image_display_status_async(self, id: int, qimg: QImage) -> None:
+        def display_result(record: RecordType) -> None:
+            if record['success']:
+                self.display_status(self.cameraStatusBar, record['human'], record['ihunch'])
+        worker = Worker(upload_image_save_record, qimg)
         worker.signals.result.connect(display_result)
         self.threadpool.start(worker)
 
-    def handle_error_camera_capture(self, *args) -> None:
+    def error_camera_or_capture(self, *args) -> None:
         self.cameraButton.setChecked(False)
+
+    def load_photo_display_status(self, *, init=False, left=False, right=False) -> None:
+        if init:
+            beg, end = None, None
+            index = -1
+        elif left:
+            beg, end = None, self.photo_timestamp
+            index = -1
+        elif right:
+            beg, end = self.photo_timestamp, None
+            index = 0
+        else:
+            raise Exception('load_photo_display_status: init, left, right are False')
+        records = RecordsDriver.load(beg, end)
+        if not records:
+            return
+        record = records[index]
+        self.photo_timestamp = record['timestamp']
+        self.pixmap.load(str(PHOTOS_DIR / f'{self.photo_timestamp}.jpg'))
+        self.photoImage.setPixmap(self.pixmap)
+        self.display_status(self.photoStatusBar, record['human'], record['ihunch'])
+
+    # def load_stat_async(self, index) -> None:
+    #     def fn(r) -> None:
+    #         pass
+    #     worker = Worker(upload_image_save_record, index)
+    #     worker.signals.result.connect(fn)
+    #     self.threadpool.start(worker)
 
     def init_setting(self):
         self.settingWarnButton.setChecked(True)
@@ -222,6 +318,21 @@ class MyWindow(Window, Form):
         self.settingStatCycle.setCurrentIndex(0)
         self.settingRecordButton.setChecked(True)
         self.settingRecordCycle.setCurrentIndex(0)
+
+    @staticmethod
+    def display_status(statusbar: QLabel, human: bool, ihunch: float):
+        if human:
+            if ihunch > 0.5:
+                text, color = '거북목', 'FF0000'
+            else:
+                text, color = '정상', '23F200'
+            text += f' ({ihunch:.4f})'
+        else:
+            text, color = '자리비움', 'FF971E'
+        statusbar.setFont(get_status_font())
+        statusbar.setText(text)
+        statusbar.setAlignment(Qt.AlignCenter)
+        statusbar.setStyleSheet(f'color: #{color}; border-style: solid;')
 
 
 def main():
@@ -233,32 +344,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = app_layout.Ui_MainWindow()
-    status = ihunch_warning.IhunchWarn()
-
-    ui.setupUi(MainWindow)
-
-    cam_thread = my_cam.VideoThread()
-    cam_thread.VIDEO_SIGNAL.connect(update_image)
-    ui.video_button.toggled.connect(cam_thread.stop_start)
-    ui.video_button.toggled.connect(ui.video_on_off)
-    cam_thread.start()
-
-    status = ihunch_warning.IhunchWarn()
-    status.status_ihunch(ui.status_bar_1)
-    status.status_normal(ui.status_bar_2)
-    status.status_no_human(ui.status_bar_3)
-    status.status_ihunch(ui.status_bar_4)
-
-    # 초기 설정값 저장
-    ui.apply_current_setting()
-    # 저장되지 않은 설정 변경 값 삭제
-    clickable(ui.tab_widget.tabBar()).connect(ui.return_current_setting)
-
-    # ui.set_reset_button.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(ui.apply_current_setting)
-    # ui.set_reset_button.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(ui.return_initial_setting) #reset 버튼 누를 시 설정 초기화
-
-    MainWindow.show()
-    sys.exit(app.exec_())
