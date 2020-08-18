@@ -23,7 +23,8 @@ def yesterday_today(jsonFV): ## 파일은 어제 오늘 json 파일 합친 내�
     
     df = df.set_index(['day','hour'])['ihunch']
     df = df.groupby(['day','hour']).mean().to_frame().reset_index()
-
+    
+    plt.figure(figsize = (8,6), dpi = 80)
     figure = sns.relplot(x="hour", y="ihunch", kind="line", hue="day", legend="full", data=df)
     figure.set(xlim=(-1,24), ylim=(0,1))
     
@@ -43,7 +44,8 @@ def week_to_day(jsonFV): ##오늘을 기준으로 일주일간 json 파일
     df['ihunch'] = df['ihunch'].astype(float)
     
     df = df.groupby(['day'])['ihunch'].mean().to_frame().reset_index()
-
+    
+    plt.figure(figsize = (8,6), dpi = 80)
     figure = sns.relplot(x="day", y="ihunch", kind="line", legend="full", data=df)
 
 def week_to_hour(jsonFV): ##오늘을 기준으로 일주일간 json 파일
@@ -66,6 +68,7 @@ def week_to_hour(jsonFV): ##오늘을 기준으로 일주일간 json 파일
     df = df.set_index(['day','hour'])['ihunch']
     df = df.groupby(['day','hour']).mean().to_frame().reset_index()
     
+    plt.figure(figsize = (8,6), dpi = 80)
     figure = sns.relplot(x="hour", y="ihunch", kind="line", hue="day", legend="full", data=df)
     figure.set(xlim=(-1,24), ylim=(0,1))
 
@@ -85,8 +88,9 @@ def today(jsonFV): ##오늘꺼 시간-분단위로 그래프 그림
     df['ihunch'] = df['ihunch'].astype(float)
     
     df = df.set_index(['hour','minute'])['ihunch']
-    print(df)
     df = df.groupby(['hour','minute']).mean().to_frame().reset_index()
+    
+    plt.figure(figsize = (8,6), dpi = 80)
     figure = sns.relplot(x="minute", y="ihunch", kind="line", hue="hour", legend="full", data=df)
     figure.set(xlim=(-1,61), ylim=(0,1))
 
