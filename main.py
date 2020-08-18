@@ -87,7 +87,7 @@ class RecordsDriver:
         json.dump(records, cls._file.open('w'))
 
     @classmethod
-    def load(cls, beg: str='', end: str='') -> List[RecordType]:
+    def load(cls, beg: str = '', end: str = '') -> List[RecordType]:
         with cls._lock:
             records = cls._load()
         if not beg and not end:
@@ -187,7 +187,7 @@ class MyWindow(Window, Form):
         'timer',
         'threadpool',
         'pixmap',
-        'photo_timestamp'
+        'photo_timestamp',
     ]
 
     def __init__(self):
@@ -202,7 +202,7 @@ class MyWindow(Window, Form):
         self.available_cameras = QCameraInfo.availableCameras()
         self.camera = self.setup_camera(self.available_cameras, 0) if self.available_cameras else None
         self.capture = self.setup_capture(self.camera) if self.camera else None
-        if self.camera is not None:
+        if self.camera is not None and self.camera.isAvailable():
             self.camera.start()
 
         # timer, threadpool, pixmap
@@ -252,7 +252,7 @@ class MyWindow(Window, Form):
         if self.camera is None and not self.resetup_camera_capture():
             return False
         if not self.capture.isReadyForCapture():
-            if not self.camera.isAvailable():
+            if not self.camera.isAvailable() and not self.resetup_camera_capture():
                 return False
             self.camera.start()
         return True
