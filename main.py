@@ -1,15 +1,21 @@
+import json
 import sys
 import traceback
+from datetime import datetime
+from pathlib import Path
 
 import requests
 from PyQt5 import uic
 from PyQt5.QtCore import (QBuffer, QEvent, QObject, QRect, QRunnable, Qt,
                           QThreadPool, QTimer, pyqtSignal, pyqtSlot)
-from PyQt5.QtGui import QFont, QImage, QPixmap
+from PyQt5.QtGui import QFont, QImage
 from PyQt5.QtMultimedia import QCamera, QCameraImageCapture, QCameraInfo
 from PyQt5.QtMultimediaWidgets import QCameraViewfinder
 from PyQt5.QtWidgets import QApplication
 
+API_HOST = 'api.ihunch.koyo.io'
+DATETIME_FORMAT = '%Y-%m-%d-%H_%M_%S'
+DATA_DIR = Path(__file__).resolve(strict=True).parent / 'data'
 
 Form, Window = uic.loadUiType('dialog.ui')
 
@@ -43,15 +49,20 @@ def qimage_to_bytes(qimg: QImage) -> bytes:
 
 
 def upload_image_api(img_bytes: bytes, *, s: requests.Session = requests.session()) -> requests.Response:
-    url = 'http://api.ihunch.koyo.io/upload'
+    url = f'http://{API_HOST}/upload'
     files = {'file': img_bytes}
     return s.post(url, files=files)
 
 
-def upload_image(qimg: QImage) -> requests.Response:
-    # timestamp = datetime.now().strftime('%Y-%m-%d-%H_%M_%S')
+def upload_image_save_result(qimg: QImage) -> requests.Response:
+    timestamp = datetime.now().strftime(DATETIME_FORMAT)
     img_bytes = qimage_to_bytes(qimg)
-    return upload_image_api(img_bytes)
+    r = upload_image_api(img_bytes)
+    with open(DATA_DIR / f'{timestamp}.jpg', 'wb') as f:
+        f.write(img_bytes)
+    with open(DATA_DIR / f'{timestamp}.json', 'w') as f:
+        json.dump(r.json() if r.status_code == requests.codes.ok else {}, f)
+    return r
 
 
 def get_status_font():
@@ -93,7 +104,6 @@ class Worker(QRunnable):
 
 class MyWindow(Window, Form):
     __slots__ = [
-        # camera
         'cameraViewfinder',
         'available_cameras',
         'camera',
@@ -105,7 +115,6 @@ class MyWindow(Window, Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        # self.cameraButton.clicked.connect(test)
 
         # viewfinder
         self.cameraViewfinder = QCameraViewfinder(self.cameraWidget)
@@ -116,7 +125,7 @@ class MyWindow(Window, Form):
         self.available_cameras = QCameraInfo.availableCameras()
         self.camera = self.setup_camera(self.available_cameras, 0) if self.available_cameras else None
         self.capture = self.setup_capture(self.camera) if self.camera else None
-        self.timer = self.setup_timer(self.capture) if self.capture else None
+        self.timer = self.setup_timer()
         if self.camera is not None:
             self.camera.start()
 
@@ -141,24 +150,23 @@ class MyWindow(Window, Form):
         capture.error.connect(self.handle_error_camera_capture)
         return capture
 
-    def setup_timer(self, capture: QCameraImageCapture) -> QTimer:
+    def setup_timer(self) -> QTimer:
         timer = QTimer()
-        timer.setInterval(4_000)
+        timer.setInterval(5_000)
         timer.timeout.connect(self.capture_with_check)
         return timer
 
-    def resetup_camera_capture_timer(self) -> bool:
+    def resetup_camera_capture(self) -> bool:
         self.available_cameras = QCameraInfo.availableCameras()
         if not self.available_cameras:
             return False
         self.camera = self.setup_camera(self.available_cameras, 0)
         self.camera.start()
         self.capture = self.setup_capture(self.camera)
-        self.timer = self.setup_timer(self.timer)
         return True
 
     def check_and_repair_capture(self) -> bool:
-        if self.camera is None and not self.resetup_camera_capture_timer():
+        if self.camera is None and not self.resetup_camera_capture():
             return False
         if not self.capture.isReadyForCapture():
             if not self.camera.isAvailable():
@@ -173,7 +181,7 @@ class MyWindow(Window, Form):
             self.cameraButton.setChecked(False)
 
     def stop_timer(self) -> None:
-        if self.timer is not None and self.timer.isActive():
+        if self.timer.isActive():
             self.timer.stop()
 
     def capture_with_check(self) -> None:
@@ -199,11 +207,10 @@ class MyWindow(Window, Form):
             self.cameraStatusBar.setFont(get_status_font())
             self.cameraStatusBar.setText(text)
             self.cameraStatusBar.setAlignment(Qt.AlignCenter)
-            self.cameraStatusBar.setStyleSheet(
-                'color: black; background-color: #{}; border-style: solid;'.format(color))
+            self.cameraStatusBar.setStyleSheet(f'color: black; background-color: #{color}; border-style: solid;')
 
-        worker = Worker(upload_image, qimg)
-        worker.signals.result.connect(lambda r: display_result(r))
+        worker = Worker(upload_image_save_result, qimg)
+        worker.signals.result.connect(display_result)
         self.threadpool.start(worker)
 
     def handle_error_camera_capture(self, *args) -> None:
