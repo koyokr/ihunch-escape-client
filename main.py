@@ -196,7 +196,7 @@ class MyWindow(Window, Form):
 
         # viewfinder
         self.cameraViewfinder = QCameraViewfinder(self.cameraWidget)
-        self.cameraViewfinder.setGeometry(QRect(0, 71, 641, 481))
+        self.cameraViewfinder.setGeometry(QRect(-1, 52, 641, 481))
         self.cameraViewfinder.setObjectName('cameraViewfinder')
         # available_cameras, camera, capture
         self.available_cameras = QCameraInfo.availableCameras()
