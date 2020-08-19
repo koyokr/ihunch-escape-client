@@ -589,6 +589,9 @@ QTabWidget::pane{
       <property name="title">
        <string>설정</string>
       </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
       <widget class="QGroupBox" name="settingWarnGroup">
        <property name="geometry">
         <rect>
@@ -677,39 +680,12 @@ QTabWidget::pane{
          <x>20</x>
          <y>180</y>
          <width>601</width>
-         <height>81</height>
+         <height>121</height>
         </rect>
        </property>
        <property name="title">
         <string/>
        </property>
-       <widget class="QPushButton" name="settingStatButton">
-        <property name="geometry">
-         <rect>
-          <x>468</x>
-          <y>43</y>
-          <width>121</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>resource/off_button.png</normaloff>
-          <normalon>resource/on_button.png</normalon>resource/off_button.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>131</width>
-          <height>31</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
        <widget class="QLabel" name="settingStatComment">
         <property name="geometry">
          <rect>
@@ -752,67 +728,181 @@ QTabWidget::pane{
          <string>통계 알림</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="settingStatCycle">
+       <widget class="QPushButton" name="settingStatCycle1">
         <property name="geometry">
          <rect>
-          <x>360</x>
-          <y>43</y>
-          <width>76</width>
-          <height>21</height>
+          <x>130</x>
+          <y>80</y>
+          <width>115</width>
+          <height>22</height>
          </rect>
         </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
+        <property name="text">
+         <string/>
         </property>
-        <property name="styleSheet">
-         <string notr="true"/>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/statistic_alarm_1_off.png</normaloff>
+          <normalon>resource/statistic_alarm_1_on.png</normalon>resource/statistic_alarm_1_off.png</iconset>
         </property>
-        <property name="duplicatesEnabled">
-         <bool>false</bool>
+        <property name="iconSize">
+         <size>
+          <width>115</width>
+          <height>33</height>
+         </size>
         </property>
-        <property name="frame">
-         <bool>false</bool>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
-        <item>
-         <property name="text">
-          <string>1시간</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2시간</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>3시간</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6시간</string>
-         </property>
-        </item>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="settingStatCycle2">
+        <property name="geometry">
+         <rect>
+          <x>244</x>
+          <y>80</y>
+          <width>115</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/statistic_alarm_2_off.png</normaloff>
+          <normalon>resource/statistic_alarm_2_on.png</normalon>resource/statistic_alarm_2_off.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>115</width>
+          <height>33</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="settingStatCycle3">
+        <property name="geometry">
+         <rect>
+          <x>357</x>
+          <y>80</y>
+          <width>116</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/statistic_alarm_3_off.png</normaloff>
+          <normalon>resource/statistic_alarm_3_on.png</normalon>resource/statistic_alarm_3_off.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>115</width>
+          <height>33</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="settingStatCycle6">
+        <property name="geometry">
+         <rect>
+          <x>471</x>
+          <y>80</y>
+          <width>116</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/statistic_alarm_4_off.png</normaloff>
+          <normalon>resource/statistic_alarm_4_on.png</normalon>resource/statistic_alarm_4_off.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>115</width>
+          <height>33</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="settingStatCycleOff">
+        <property name="geometry">
+         <rect>
+          <x>18</x>
+          <y>80</y>
+          <width>115</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/statistic_alarm_0_off.png</normaloff>
+          <normalon>resource/statistic_alarm_0_on.png</normalon>resource/statistic_alarm_0_off.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>115</width>
+          <height>33</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
        </widget>
       </widget>
-      <widget class="QLabel" name="label">
+      <widget class="QPushButton" name="logo">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>340</y>
-         <width>601</width>
-         <height>161</height>
+         <x>130</x>
+         <y>400</y>
+         <width>391</width>
+         <height>111</height>
         </rect>
        </property>
        <property name="text">
         <string/>
        </property>
-       <property name="pixmap">
-        <pixmap>resource/정보호호119.png</pixmap>
+       <property name="icon">
+        <iconset>
+         <normaloff>resource/정보호호119.png</normaloff>resource/정보호호119.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>400</width>
+         <height>112</height>
+        </size>
        </property>
       </widget>
      </widget>
