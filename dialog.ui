@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>638</width>
-    <height>658</height>
+    <width>639</width>
+    <height>617</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -38,11 +38,17 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>-2</x>
-      <y>-1</y>
-      <width>644</width>
-      <height>662</height>
+      <x>0</x>
+      <y>0</y>
+      <width>639</width>
+      <height>617</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="minimumSize">
      <size>
@@ -52,26 +58,58 @@
     </property>
     <property name="maximumSize">
      <size>
-      <width>16777215</width>
-      <height>16777215</height>
+      <width>639</width>
+      <height>653</height>
      </size>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">QTabBar {                                          
+            background: #e2effa;                         
+            color: black                                                          
+        }                                                                                                                              
+        QTabBar::tab:selected {                            
+            background: #f6fafe;                                         
+        }                                                                                                   
+        QTabBar::tab {                  
+            background: #bfd6e8;                         
+            color: #000000;
+			border-width: 1px;
+			border-style: solid;
+			border-color: #b2c7d7;
+		}
+QTabWidget::pane{
+		background-color: #f6fafe;
+		border-radius: 10px;
+}</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="iconSize">
      <size>
-      <width>108</width>
+      <width>117</width>
       <height>30</height>
      </size>
     </property>
     <property name="usesScrollButtons">
+     <bool>false</bool>
+    </property>
+    <property name="documentMode">
+     <bool>false</bool>
+    </property>
+    <property name="tabsClosable">
+     <bool>false</bool>
+    </property>
+    <property name="tabBarAutoHide">
      <bool>false</bool>
     </property>
     <widget class="QWidget" name="cameraWidget">
@@ -104,9 +142,9 @@
       <property name="geometry">
        <rect>
         <x>-1</x>
-        <y>71</y>
-        <width>640</width>
-        <height>480</height>
+        <y>53</y>
+        <width>641</width>
+        <height>481</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -116,7 +154,7 @@
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="lineWidth">
        <number>1</number>
@@ -127,19 +165,23 @@
        <rect>
         <x>-1</x>
         <y>-1</y>
-        <width>640</width>
-        <height>73</height>
+        <width>641</width>
+        <height>55</height>
        </rect>
       </property>
       <property name="font">
        <font>
+        <family>나눔바른고딕</family>
         <pointsize>30</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="text">
        <string/>
@@ -151,26 +193,27 @@
      <widget class="QPushButton" name="cameraButton">
       <property name="geometry">
        <rect>
-        <x>-3</x>
-        <y>549</y>
-        <width>644</width>
-        <height>73</height>
+        <x>-2</x>
+        <y>532</y>
+        <width>643</width>
+        <height>55</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
-        <width>644</width>
+        <width>0</width>
         <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>644</width>
+        <width>16777215</width>
         <height>16777215</height>
        </size>
       </property>
       <property name="font">
        <font>
+        <family>나눔바른고딕</family>
         <pointsize>30</pointsize>
         <weight>75</weight>
         <bold>true</bold>
@@ -216,10 +259,10 @@
      <widget class="QTabWidget" name="statTabWidget">
       <property name="geometry">
        <rect>
-        <x>-2</x>
-        <y>-2</y>
-        <width>644</width>
-        <height>625</height>
+        <x>0</x>
+        <y>0</y>
+        <width>641</width>
+        <height>585</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -234,6 +277,13 @@
         <height>16777215</height>
        </size>
       </property>
+      <property name="font">
+       <font>
+        <family>나눔바른고딕</family>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -244,11 +294,11 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
-        <width>154</width>
+        <width>163</width>
         <height>30</height>
        </size>
       </property>
@@ -283,9 +333,16 @@
          <rect>
           <x>-1</x>
           <y>-1</y>
-          <width>640</width>
-          <height>73</height>
+          <width>641</width>
+          <height>55</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>나눔바른고딕</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
@@ -295,9 +352,9 @@
         <property name="geometry">
          <rect>
           <x>-1</x>
-          <y>71</y>
-          <width>640</width>
-          <height>480</height>
+          <y>53</y>
+          <width>641</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -305,6 +362,9 @@
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
+        </property>
+        <property name="midLineWidth">
+         <number>0</number>
         </property>
        </widget>
       </widget>
@@ -321,9 +381,16 @@
          <rect>
           <x>-1</x>
           <y>-1</y>
-          <width>640</width>
-          <height>73</height>
+          <width>641</width>
+          <height>55</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>나눔바른고딕</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
@@ -333,9 +400,9 @@
         <property name="geometry">
          <rect>
           <x>-1</x>
-          <y>71</y>
-          <width>640</width>
-          <height>480</height>
+          <y>53</y>
+          <width>641</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -358,9 +425,9 @@
         <property name="geometry">
          <rect>
           <x>-1</x>
-          <y>71</y>
-          <width>640</width>
-          <height>480</height>
+          <y>53</y>
+          <width>641</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -375,9 +442,16 @@
          <rect>
           <x>-1</x>
           <y>-1</y>
-          <width>640</width>
-          <height>73</height>
+          <width>641</width>
+          <height>55</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>나눔바른고딕</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
@@ -399,21 +473,35 @@
        <rect>
         <x>-1</x>
         <y>-1</y>
-        <width>640</width>
-        <height>73</height>
+        <width>641</width>
+        <height>55</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>나눔바른고딕</family>
+        <pointsize>30</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="photoImage">
       <property name="geometry">
        <rect>
         <x>-1</x>
-        <y>71</y>
-        <width>640</width>
-        <height>480</height>
+        <y>53</y>
+        <width>641</width>
+        <height>481</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -423,16 +511,16 @@
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
      </widget>
      <widget class="QPushButton" name="photoLeftButton">
       <property name="geometry">
        <rect>
-        <x>171</x>
-        <y>560</y>
-        <width>49</width>
-        <height>49</height>
+        <x>201</x>
+        <y>535</y>
+        <width>47</width>
+        <height>47</height>
        </rect>
       </property>
       <property name="icon">
@@ -441,8 +529,8 @@
       </property>
       <property name="iconSize">
        <size>
-        <width>48</width>
-        <height>48</height>
+        <width>46</width>
+        <height>46</height>
        </size>
       </property>
       <property name="flat">
@@ -452,10 +540,10 @@
      <widget class="QPushButton" name="photoRightButton">
       <property name="geometry">
        <rect>
-        <x>420</x>
-        <y>560</y>
-        <width>50</width>
-        <height>49</height>
+        <x>390</x>
+        <y>535</y>
+        <width>47</width>
+        <height>47</height>
        </rect>
       </property>
       <property name="icon">
@@ -464,8 +552,8 @@
       </property>
       <property name="iconSize">
        <size>
-        <width>48</width>
-        <height>48</height>
+        <width>46</width>
+        <height>46</height>
        </size>
       </property>
       <property name="flat">
@@ -484,15 +572,18 @@
      <widget class="QGroupBox" name="settingGroup">
       <property name="geometry">
        <rect>
-        <x>-1</x>
+        <x>0</x>
         <y>10</y>
-        <width>640</width>
-        <height>611</height>
+        <width>639</width>
+        <height>576</height>
        </rect>
       </property>
       <property name="font">
        <font>
+        <family>나눔바른고딕</family>
         <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="title">
@@ -502,7 +593,7 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>30</y>
+         <y>60</y>
          <width>601</width>
          <height>81</height>
         </rect>
@@ -514,15 +605,15 @@
         <property name="geometry">
          <rect>
           <x>467</x>
-          <y>37</y>
+          <y>43</y>
           <width>121</width>
           <height>21</height>
          </rect>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>resource/off_button_test.png</normaloff>
-          <normalon>resource/on_button_test.png</normalon>resource/off_button_test.png</iconset>
+          <normaloff>resource/off_button.png</normaloff>
+          <normalon>resource/on_button.png</normalon>resource/off_button.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -548,7 +639,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>나눔바른고딕</family>
+          <pointsize>13</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -561,14 +653,17 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>30</y>
+          <y>33</y>
           <width>321</width>
           <height>41</height>
          </rect>
         </property>
         <property name="font">
          <font>
+          <family>나눔바른고딕</family>
           <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -580,7 +675,7 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>140</y>
+         <y>180</y>
          <width>601</width>
          <height>81</height>
         </rect>
@@ -592,15 +687,15 @@
         <property name="geometry">
          <rect>
           <x>468</x>
-          <y>37</y>
+          <y>43</y>
           <width>121</width>
           <height>21</height>
          </rect>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>resource/off_button_test.png</normaloff>
-          <normalon>resource/on_button_test.png</normalon>resource/off_button_test.png</iconset>
+          <normaloff>resource/off_button.png</normaloff>
+          <normalon>resource/on_button.png</normalon>resource/off_button.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -619,14 +714,17 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>30</y>
+          <y>33</y>
           <width>321</width>
           <height>41</height>
          </rect>
         </property>
         <property name="font">
          <font>
+          <family>나눔바른고딕</family>
           <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -644,7 +742,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>나눔바른고딕</family>
+          <pointsize>13</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -657,7 +756,7 @@
         <property name="geometry">
          <rect>
           <x>360</x>
-          <y>37</y>
+          <y>43</y>
           <width>76</width>
           <height>21</height>
          </rect>
@@ -665,18 +764,19 @@
         <property name="font">
          <font>
           <pointsize>9</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
-        <item>
-         <property name="text">
-          <string>15분</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>30분</string>
-         </property>
-        </item>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="duplicatesEnabled">
+         <bool>false</bool>
+        </property>
+        <property name="frame">
+         <bool>false</bool>
+        </property>
         <item>
          <property name="text">
           <string>1시간</string>
@@ -684,123 +784,36 @@
         </item>
         <item>
          <property name="text">
+          <string>2시간</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>3시간</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>6시간</string>
          </property>
         </item>
        </widget>
       </widget>
-      <widget class="QGroupBox" name="settingRecordGroup">
+      <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>250</y>
+         <x>10</x>
+         <y>340</y>
          <width>601</width>
-         <height>81</height>
+         <height>161</height>
         </rect>
        </property>
-       <property name="title">
+       <property name="text">
         <string/>
        </property>
-       <widget class="QPushButton" name="settingRecordButton">
-        <property name="geometry">
-         <rect>
-          <x>468</x>
-          <y>37</y>
-          <width>121</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>resource/off_button_test.png</normaloff>
-          <normalon>resource/on_button_test.png</normalon>resource/off_button_test.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>131</width>
-          <height>31</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QLabel" name="settingRecordComment">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>30</y>
-          <width>321</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>일정 기간 동안의 거북목 사진 및 결과값을 기록합니다.</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="settingRecordTitle">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>12</y>
-          <width>191</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>기록</string>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="settingRecordCycle">
-        <property name="geometry">
-         <rect>
-          <x>360</x>
-          <y>37</y>
-          <width>76</width>
-          <height>22</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <item>
-         <property name="text">
-          <string>1일</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>7일</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>30일</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>180일</string>
-         </property>
-        </item>
-       </widget>
+       <property name="pixmap">
+        <pixmap>resource/정보호호119.png</pixmap>
+       </property>
       </widget>
      </widget>
     </widget>
