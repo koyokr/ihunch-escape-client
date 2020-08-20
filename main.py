@@ -274,7 +274,6 @@ class StatCanvas(FigureCanvasQTAgg):
         df = df.groupby('day', as_index=False).mean()
         self.ax.cla()
         sns.barplot(x='day', y='ihunch', data=df, ax=self.ax)
-        self.ax.axhline(y=0.5, ls=':', c='.5')
         self.ax.set(ylim=(0, 1))
 
 
@@ -467,19 +466,22 @@ class MyWindow(Window, Form):
 
     def notify_warn_if_bad(self) -> None:
         minutes = 5
-        beg = datetime.now() - timedelta(seconds=minutes * 60)
+        beg = datetime.now() - timedelta(minutes=minutes)
         records = RecordsDriver.load(beg)
         stats = [x['ihunch'] > 0.5 for x in records if x['human']]
+        if not stats:
+            return
         ihunch_percent = sum(stats) / len(stats) * 100
-        if ihunch_percent > 90:
-            self.warn_notifier.notify('거북목 경고',
-                                      f'최근 {minutes}분 중에 거북목 자세 비중이 {ihunch_percent:.2f}%를 차지합니다!',
-                                      '거북목 탈출 넘버원',
-                                      on_action=lambda nid, index: self.settingWarnButton.setChecked(False) if index == 1 else None)
+        if ihunch_percent < 90:
+            return
+        self.warn_notifier.notify('거북목 경고',
+                                  f'최근 {minutes}분 중에 거북목 자세 비중이 {ihunch_percent:.2f}%를 차지합니다!',
+                                  '거북목 탈출 넘버원',
+                                  on_action=lambda nid, index: self.settingWarnButton.setChecked(False) if index == 1 else None)
 
     def notify_stat(self) -> None:
         hours = self.stat_notifier_timer.interval() // 3_600_000
-        beg = datetime.now() - timedelta(seconds=hours * 3_600)
+        beg = datetime.now() - timedelta(hours=hours)
         records = RecordsDriver.load(beg)
         stats = [x['ihunch'] > 0.5 for x in records if x['human']]
         ihunch_percent = sum(stats) / len(stats) * 100
