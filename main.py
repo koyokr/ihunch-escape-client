@@ -15,7 +15,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from PyQt5 import uic
 from PyQt5.QtCore import (QBuffer, QObject, QRect, QRunnable, Qt, QThreadPool,
                           QTimer, pyqtSignal, pyqtSlot)
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QIcon, QImage, QPixmap
 from PyQt5.QtMultimedia import QCamera, QCameraImageCapture, QCameraInfo
 from PyQt5.QtMultimediaWidgets import QCameraViewfinder
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton
@@ -345,6 +345,9 @@ class MyWindow(Window, Form):
         self.connect_setting_stat_cycle_selected(self.settingStatCycle2)
         self.connect_setting_stat_cycle_selected(self.settingStatCycle3)
         self.connect_setting_stat_cycle_selected(self.settingStatCycle6)
+        self.settingStatTestButton.pressed.connect(lambda: self.settingStatTestButton.setIcon(QIcon('resource/test_off.png')))
+        self.settingStatTestButton.released.connect(lambda: self.settingStatTestButton.setIcon(QIcon('resource/test_on.png')))
+        self.settingStatTestButton.clicked.connect(self.notify_stat)
 
     def connect_setting_stat_cycle_selected(self, cycle: QPushButton) -> None:
         def selected(toggle: bool) -> None:
