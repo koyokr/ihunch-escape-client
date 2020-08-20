@@ -12,14 +12,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>0</height>
+    <width>639</width>
+    <height>617</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>16777215</width>
-    <height>16777215</height>
+    <width>639</width>
+    <height>617</height>
    </size>
   </property>
   <property name="font">
@@ -565,33 +565,6 @@ QTabWidget::pane{
        <property name="title">
         <string/>
        </property>
-       <widget class="QPushButton" name="settingWarnButton">
-        <property name="geometry">
-         <rect>
-          <x>467</x>
-          <y>43</y>
-          <width>121</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>resource/off_button.png</normaloff>
-          <normalon>resource/on_button.png</normalon>resource/off_button.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>131</width>
-          <height>31</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
        <widget class="QLabel" name="settingWarnTitle">
         <property name="geometry">
          <rect>
@@ -632,6 +605,33 @@ QTabWidget::pane{
         </property>
         <property name="text">
          <string>장시간 거북목을 유지할 경우 알림을 보내줍니다.</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="settingWarnButton">
+        <property name="geometry">
+         <rect>
+          <x>358</x>
+          <y>37</y>
+          <width>229</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/off_button.png</normaloff>
+          <normalon>resource/on_button.png</normalon>resource/off_button.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>230</width>
+          <height>57</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </widget>
