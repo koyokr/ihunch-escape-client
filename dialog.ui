@@ -92,7 +92,7 @@ QTabWidget::pane{
 }</string>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <property name="iconSize">
      <size>
@@ -604,7 +604,7 @@ QTabWidget::pane{
          </font>
         </property>
         <property name="text">
-         <string>장시간 거북목을 유지할 경우 알림을 보내줍니다.</string>
+         <string>거북목이 장시간 관찰될 경우 알림을 보내줍니다.</string>
         </property>
        </widget>
        <widget class="QPushButton" name="settingWarnButton">
@@ -886,11 +886,11 @@ QTabWidget::pane{
        </property>
        <property name="font">
         <font>
-         <family>나눔스퀘어라운드 ExtraBold</family>
-         <pointsize>40</pointsize>
-         <weight>75</weight>
+         <family>나눔손글씨 붓</family>
+         <pointsize>48</pointsize>
+         <weight>50</weight>
          <italic>false</italic>
-         <bold>true</bold>
+         <bold>false</bold>
         </font>
        </property>
        <property name="text">

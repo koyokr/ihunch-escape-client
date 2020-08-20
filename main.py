@@ -487,6 +487,8 @@ class MyWindow(Window, Form):
         beg = datetime.now() - timedelta(hours=hours)
         records = RecordsDriver.load(beg)
         stats = [x['ihunch'] > 0.5 for x in records if x['human']]
+        if not stats:
+            return
         ihunch_percent = sum(stats) / len(stats) * 100
         self.stat_notifier.notify('최근 거북목 통계',
                                   f'최근 {hours}시간 중에 거북목 자세 비중이 {ihunch_percent:.2f}%를 차지했습니다.',
