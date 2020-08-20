@@ -5,9 +5,13 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Union
 
+import matplotlib.pyplot as plt
+import pandas as pd
 import requests
+import seaborn as sns
 import zroya
 from filelock import FileLock
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from PyQt5 import uic
 from PyQt5.QtCore import (QBuffer, QObject, QRect, QRunnable, Qt, QThreadPool,
                           QTimer, pyqtSignal, pyqtSlot)
@@ -61,6 +65,10 @@ def upload_image_save_record(qimg: QImage) -> RecordType:
     return record
 
 
+def today_truncated():
+    return datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+
 class RecordsDriver:
     _file = DATA_DIR / 'records.json'
     _lock = FileLock(_file.parent / f'{_file.name}.lock')
@@ -78,17 +86,17 @@ class RecordsDriver:
         json.dump(records, cls._file.open('w'))
 
     @classmethod
-    def load(cls, beg: str = '', end: str = '') -> List[RecordType]:
+    def load(cls, beg: Optional[datetime] = None, end: Optional[datetime] = None) -> List[RecordType]:
         with cls._lock:
             records = cls._load()
-        if not beg and not end:
-            pass
-        elif not beg:
-            records = [x for x in records if x['timestamp'] < end]
-        elif not end:
-            records = [x for x in records if beg < x['timestamp']]
-        else:
+        beg = beg.strftime(DATETIME_FORMAT) if beg is not None else None
+        end = end.strftime(DATETIME_FORMAT) if end is not None else None
+        if beg is not None and end is not None:
             records = [x for x in records if beg < x['timestamp'] < end]
+        elif beg is not None:
+            records = [x for x in records if beg < x['timestamp']]
+        elif end is not None:
+            records = [x for x in records if x['timestamp'] < end]
         return records
 
     @classmethod
@@ -207,15 +215,80 @@ class Worker(QRunnable):
             self.signals.finished.emit()
 
 
+class StatCanvas(FigureCanvasQTAgg):
+    __slots__ = ['fig', 'ax']
+
+    def __init__(self, parent, object_name, width=640, height=480):
+        self.fig = plt.Figure()
+        dpi = self.fig.get_dpi()
+        self.fig.set_size_inches(width / dpi, height / dpi)
+        self.ax = self.fig.add_subplot(1, 1, 1)
+        super().__init__(self.fig)
+        self.setParent(parent)
+        self.setGeometry(QRect(-1, 53, width + 1, height + 1))
+        self.setObjectName(object_name)
+
+    def plot_today_vs_yesterday(self) -> None:
+        today = today_truncated()
+        yesterday = today - timedelta(days=1)
+        records = RecordsDriver.load(beg=yesterday)
+        df = pd.DataFrame(records)
+        timestamp = pd.to_datetime(df.timestamp)
+        df['day'] = timestamp.dt.day
+        df['hour'] = timestamp.dt.hour
+        df = df.groupby(['day', 'hour'], as_index=False).mean()
+        self.ax.cla()
+        sns.lineplot(x='hour', y='ihunch', hue='day', style='day', data=df,
+                     legend='full', marker='.', linewidth=2, ax=self.ax)
+        self.ax.axhline(y=0.5, ls=':', c='.5')
+        self.ax.set(xlim=(0, 24), ylim=(0, 1))
+
+    def plot_week_to_day(self) -> None:
+        today = today_truncated()
+        a_week_ago = today - timedelta(days=7)
+        records = RecordsDriver.load(beg=a_week_ago)
+        df = pd.DataFrame(records)
+        timestamp = pd.to_datetime(df.timestamp)
+        df['day'] = timestamp.dt.day
+        df = df.groupby('day', as_index=False).mean()
+        self.ax.cla()
+        sns.lineplot(x='day', y='ihunch', ci=None, marker='o', color='r',
+                    dashes=False, linewidth=2, data=df, ax=self.ax)
+        self.ax.axhline(y=0.5, ls=':', c='.5')
+        self.ax.set(xlim=(a_week_ago.day, today.day), ylim=(0, 1))
+
+    def plot_week_to_percent(self) -> None:
+        today = today_truncated()
+        a_week_ago = today - timedelta(days=7)
+        records = RecordsDriver.load(beg=a_week_ago)
+        df = pd.DataFrame(records)
+        timestamp = pd.to_datetime(df.timestamp)
+        df['day'] = timestamp.dt.day
+        df['ihunch'] = df.ihunch >= 0.5
+        df = df.groupby('day', as_index=False).mean()
+        self.ax.cla()
+        sns.barplot(x='day', y='ihunch', data=df, ax=self.ax)
+        self.ax.axhline(y=0.5, ls=':', c='.5')
+        self.ax.set(ylim=(0, 1))
+
+
 class MyWindow(Window, Form):
     __slots__ = [
-        'threadpool',
-        'pixmap',
+        # widgets
         'cameraViewfinder',
+        'statCanvas0',
+        'statCanvas1',
+        'statCanvas2',
+        # commons
+        'threadpool',
+        # camera
         'camera',
         'capture',
         'capture_timer',
+        # photo
         'photo_timestamp',
+        'photo_pixmap',
+        # setting
         'warn_notifier',
         'warn_notifier_timer',
         'stat_notifier',
@@ -226,19 +299,24 @@ class MyWindow(Window, Form):
         super().__init__()
         self.setupUi(self)
 
-        # threadpool, pixmap
-        self.threadpool = QThreadPool()
-        self.pixmap = QPixmap()
-        # camera
+        # widgets
         self.cameraViewfinder = QCameraViewfinder(self.cameraWidget)
         self.cameraViewfinder.setGeometry(QRect(-1, 52, 641, 481))
         self.cameraViewfinder.setObjectName('cameraViewfinder')
+        self.statCanvas0 = StatCanvas(self.statWidget0, 'statCanvas0', 640, 480)
+        self.statCanvas1 = StatCanvas(self.statWidget1, 'statCanvas1', 640, 480)
+        self.statCanvas2 = StatCanvas(self.statWidget2, 'statCanvas2', 640, 480)
+
+        # common
+        self.threadpool = QThreadPool()
+        # camera
         self.camera = None
         self.capture = None
         self.init_camera_and_capture()
         self.capture_timer = self.create_timer(5_000, self.capture_safe)
         # photo
         self.photo_timestamp = None
+        self.photo_pixmap = QPixmap()
         # setting
         self.warn_notifier = Notifier(['확인', '무시'])
         self.warn_notifier_timer = self.create_timer(60_000, self.notify_warn_if_bad)
@@ -248,9 +326,8 @@ class MyWindow(Window, Form):
         # connect: camera
         self.cameraButton.toggled.connect(lambda toggle: self.cameraButton.setText('정지' if toggle else '시작'))
         self.cameraButton.toggled.connect(self.toggle_all_timers)
-        # connect: stat
+        # connect: stat, photo
         self.statTabWidget.tabBarClicked.connect(self.load_stat)
-        # connect: photo
         self.tabWidget.tabBarClicked.connect(lambda index:
                                              self.load_stat(self.statTabWidget.currentIndex()) if index == 1 else
                                              self.load_photo() if index == 2 else None)
@@ -287,7 +364,7 @@ class MyWindow(Window, Form):
         if not available_cameras:
             return False
         self.camera = self.create_camera(available_cameras, 0, self.cameraViewfinder, self.error_camera)
-        self.capture = self.create_capture(self.camera, self.process_image_threadpool, self.error_camera)
+        self.capture = self.create_capture(self.camera, self.process_image_on_threadpool, self.error_camera)
         if self.camera.isAvailable():
             self.camera.start()
         return True
@@ -326,13 +403,23 @@ class MyWindow(Window, Form):
         msec = int(text) * 3_600_000
         return msec
 
-    def process_image_threadpool(self, id: int, qimg: QImage) -> None:
+    def process_image_on_threadpool(self, id: int, qimg: QImage) -> None:
         def display_result(record: RecordType) -> None:
             if record['success']:
                 self.display_ihunch_status(self.cameraStatusBar, record['human'], record['ihunch'])
         worker = Worker(upload_image_save_record, qimg)
         worker.signals.result.connect(display_result)
         self.threadpool.start(worker)
+
+    def load_stat(self, index: int = 0) -> None:
+        statCanvas = getattr(self, f'statCanvas{index}')
+        if index == 0:
+            statCanvas.plot_today_vs_yesterday()
+        elif index == 1:
+            statCanvas.plot_week_to_day()
+        else:
+            statCanvas.plot_week_to_percent()
+        statCanvas.draw()
 
     def load_photo(self, left=False, right=False) -> None:
         beg, end = None, None
@@ -343,23 +430,13 @@ class MyWindow(Window, Form):
             beg = self.photo_timestamp
             index = 0
         records = RecordsDriver.load(beg, end)
-        if not records:
-            return
-        record = records[index]
-        self.photo_timestamp = record['timestamp']
-        self.pixmap.load(str(PHOTOS_DIR / f'{self.photo_timestamp}.jpg'))
-        self.photoImage.setPixmap(self.pixmap)
-        self.display_ihunch_status(self.photoStatusBar, record['human'], record['ihunch'])
-
-    def load_stat(self, index: int = 0) -> None:
-        suffix = str(index + 1)
-        statImage = getattr(self, 'statImage' + suffix)
-        statusbar = getattr(self, 'statStatusBar' + suffix)
-        # self.pixmap.loadFromData(b'', 'jpg')
-        # statImage.setPixmap(self.pixmap)
-        # statusbar.setText(text)
-        # statusbar.setAlignment(Qt.AlignCenter)
-        # statusbar.setStyleSheet(f'color: #{color}; border-style: solid;')
+        if records:
+            record = records[index]
+            timestamp = record['timestamp']
+            self.photo_timestamp = datetime.strptime(timestamp, DATETIME_FORMAT)
+            self.photo_pixmap.load(str(PHOTOS_DIR / f'{timestamp}.jpg'))
+            self.photoImage.setPixmap(self.photo_pixmap)
+            self.display_ihunch_status(self.photoStatusBar, record['human'], record['ihunch'])
 
     def toggle_all_timers(self, toggle: bool) -> None:
         if toggle:
@@ -385,7 +462,7 @@ class MyWindow(Window, Form):
     def notify_warn_if_bad(self) -> None:
         minutes = 5
         beg = datetime.now() - timedelta(seconds=minutes * 60)
-        records = RecordsDriver.load(beg.strftime(DATETIME_FORMAT))
+        records = RecordsDriver.load(beg)
         stats = [x['ihunch'] > 0.5 for x in records if x['human']]
         ihunch_percent = sum(stats) / len(stats) * 100
         if ihunch_percent > 90:
@@ -397,7 +474,7 @@ class MyWindow(Window, Form):
     def notify_stat(self) -> None:
         hours = self.stat_notifier_timer.interval() // 3_600_000
         beg = datetime.now() - timedelta(seconds=hours * 3_600)
-        records = RecordsDriver.load(beg.strftime(DATETIME_FORMAT))
+        records = RecordsDriver.load(beg)
         stats = [x['ihunch'] > 0.5 for x in records if x['human']]
         ihunch_percent = sum(stats) / len(stats) * 100
         self.stat_notifier.notify('최근 거북목 통계',
