@@ -232,6 +232,8 @@ class StatCanvas(FigureCanvasQTAgg):
         today = today_truncated()
         yesterday = today - timedelta(days=1)
         records = RecordsDriver.load(beg=yesterday)
+        if not records:
+            return
         df = pd.DataFrame(records)
         timestamp = pd.to_datetime(df.timestamp)
         df['day'] = timestamp.dt.day
@@ -247,6 +249,8 @@ class StatCanvas(FigureCanvasQTAgg):
         today = today_truncated()
         a_week_ago = today - timedelta(days=7)
         records = RecordsDriver.load(beg=a_week_ago)
+        if not records:
+            return
         df = pd.DataFrame(records)
         timestamp = pd.to_datetime(df.timestamp)
         df['day'] = timestamp.dt.day
@@ -261,6 +265,8 @@ class StatCanvas(FigureCanvasQTAgg):
         today = today_truncated()
         a_week_ago = today - timedelta(days=7)
         records = RecordsDriver.load(beg=a_week_ago)
+        if not records:
+            return
         df = pd.DataFrame(records)
         timestamp = pd.to_datetime(df.timestamp)
         df['day'] = timestamp.dt.day
