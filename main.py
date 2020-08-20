@@ -263,10 +263,6 @@ class MyWindow(Window, Form):
         self.connect_setting_stat_cycle_selected(self.settingStatCycle2)
         self.connect_setting_stat_cycle_selected(self.settingStatCycle3)
         self.connect_setting_stat_cycle_selected(self.settingStatCycle6)
-        self.settingStatCycle1.toggled.connect(self.toggle_stat_timer)
-        self.settingStatCycle2.toggled.connect(self.toggle_stat_timer)
-        self.settingStatCycle3.toggled.connect(self.toggle_stat_timer)
-        self.settingStatCycle6.toggled.connect(self.toggle_stat_timer)
 
     def connect_setting_stat_cycle_selected(self, cycle: QPushButton) -> None:
         def selected(toggle: bool) -> None:
@@ -275,6 +271,7 @@ class MyWindow(Window, Form):
                 cycle.setChecked(True)
             elif toggle:
                 checkeds[0].setChecked(False)
+                self.toggle_stat_timer(cycle is not self.settingStatCycleOff)
         others: List[QPushButton] = [
             self.settingStatCycle1,
             self.settingStatCycle2,
