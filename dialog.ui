@@ -314,13 +314,42 @@ QTabWidget::pane{
       <property name="tabBarAutoHide">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="statWidget1">
+      <widget class="QWidget" name="statWidget0">
        <attribute name="icon">
         <iconset>
          <normaloff>resource/graph_1.png</normaloff>resource/graph_1.png</iconset>
        </attribute>
        <attribute name="title">
         <string>통계 1</string>
+       </attribute>
+       <widget class="QLabel" name="statStatusBar0">
+        <property name="geometry">
+         <rect>
+          <x>-1</x>
+          <y>-1</y>
+          <width>641</width>
+          <height>55</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>나눔바른고딕</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Panel</enum>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="statWidget1">
+       <attribute name="icon">
+        <iconset>
+         <normaloff>resource/graph_2.png</normaloff>resource/graph_2.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>통계 2</string>
        </attribute>
        <widget class="QLabel" name="statStatusBar1">
         <property name="geometry">
@@ -342,72 +371,8 @@ QTabWidget::pane{
          <enum>QFrame::Panel</enum>
         </property>
        </widget>
-       <widget class="QLabel" name="statImage1">
-        <property name="geometry">
-         <rect>
-          <x>-1</x>
-          <y>53</y>
-          <width>641</width>
-          <height>481</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Panel</enum>
-        </property>
-        <property name="midLineWidth">
-         <number>0</number>
-        </property>
-       </widget>
       </widget>
       <widget class="QWidget" name="statWidget2">
-       <attribute name="icon">
-        <iconset>
-         <normaloff>resource/graph_2.png</normaloff>resource/graph_2.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>통계 2</string>
-       </attribute>
-       <widget class="QLabel" name="statStatusBar2">
-        <property name="geometry">
-         <rect>
-          <x>-1</x>
-          <y>-1</y>
-          <width>641</width>
-          <height>55</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>나눔바른고딕</family>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Panel</enum>
-        </property>
-       </widget>
-       <widget class="QLabel" name="statImage2">
-        <property name="geometry">
-         <rect>
-          <x>-1</x>
-          <y>53</y>
-          <width>641</width>
-          <height>481</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Panel</enum>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="statWidget3">
        <attribute name="icon">
         <iconset>
          <normaloff>resource/graph_3.png</normaloff>resource/graph_3.png</iconset>
@@ -415,23 +380,7 @@ QTabWidget::pane{
        <attribute name="title">
         <string>통계 3</string>
        </attribute>
-       <widget class="QLabel" name="statImage3">
-        <property name="geometry">
-         <rect>
-          <x>-1</x>
-          <y>53</y>
-          <width>641</width>
-          <height>481</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Panel</enum>
-        </property>
-       </widget>
-       <widget class="QLabel" name="statStatusBar3">
+       <widget class="QLabel" name="statStatusBar2">
         <property name="geometry">
          <rect>
           <x>-1</x>
