@@ -11,11 +11,12 @@ from filelock import FileLock
 from PyQt5 import uic
 from PyQt5.QtCore import (QBuffer, QObject, QRect, QRunnable, Qt, QThreadPool,
                           QTimer, pyqtSignal, pyqtSlot)
-from PyQt5.QtGui import QFont, QImage, QPixmap
+from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtMultimedia import QCamera, QCameraImageCapture, QCameraInfo
 from PyQt5.QtMultimediaWidgets import QCameraViewfinder
-from PyQt5.QtWidgets import QApplication, QLabel
+from PyQt5.QtWidgets import QApplication, QLabel, QPushButton
 
+APPID = 'is119.ihunch-escape.client.0-dev'
 API_HOST = 'api.ihunch.koyo.io'
 DATETIME_FORMAT = '%Y%m%d-%H%M%S'
 
@@ -40,7 +41,7 @@ def qimage_to_bytes(qimg: QImage) -> bytes:
 
 
 def upload_image_api(bimg: bytes, *, s: requests.Session = requests.session()) -> requests.Response:
-    return s.post(f'http://{API_HOST}/upload', files={'file': bimg})
+    return s.post(f'https://{API_HOST}/upload', files={'file': bimg})
 
 
 def upload_image_save_record(qimg: QImage) -> RecordType:
@@ -58,15 +59,6 @@ def upload_image_save_record(qimg: QImage) -> RecordType:
         record['ihunch'] = j['pred']
     RecordsDriver.append(record)
     return record
-
-
-# def get_status_font() -> QFont:
-#     font = QFont()
-#     font.setFamily('나눔바른고딕')
-#     font.setPointSize(30)
-#     font.setBold(True)
-#     font.setWeight(50)
-#     return font
 
 
 class RecordsDriver:
@@ -155,7 +147,7 @@ class Notifier:
 
     def __init__(self, acts: Iterable[str] = []):
         if __class__._ is None:
-            __class__._ = zroya.init('iHunch Escape No. 1', 'is119', 'ihunch-escape', 'client', '0.1.0-dev')
+            __class__._ = zroya.init('iHunch Escape No. 1', *APPID.split('.'))
         self._t = zroya.Template(zroya.TemplateType.Text4)
         for act in acts:
             self._t.addAction(act)
@@ -233,6 +225,7 @@ class MyWindow(Window, Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
         # threadpool, pixmap
         self.threadpool = QThreadPool()
         self.pixmap = QPixmap()
@@ -247,23 +240,50 @@ class MyWindow(Window, Form):
         # photo
         self.photo_timestamp = None
         # setting
-        self.warn_notifier = Notifier(['확인'])
+        self.warn_notifier = Notifier(['확인', '무시'])
         self.warn_notifier_timer = self.create_timer(60_000, self.notify_warn_if_bad)
-        self.stat_notifier = Notifier(['확인'])
+        self.stat_notifier = Notifier(['확인', '무시'])
         self.stat_notifier_timer = self.create_timer(self.get_setting_stat_interval(), self.notify_stat)
+
         # connect: camera
+        self.cameraButton.toggled.connect(lambda toggle: self.cameraButton.setText('정지' if toggle else '시작'))
         self.cameraButton.toggled.connect(self.toggle_all_timers)
         # connect: stat
         self.statTabWidget.tabBarClicked.connect(self.load_stat)
         # connect: photo
-        self.tabWidget.tabBarClicked.connect(lambda index: self.load_stat(self.statTabWidget.currentIndex()) if index == 1 else
-                                                           self.load_photo() if index == 2 else None)
+        self.tabWidget.tabBarClicked.connect(lambda index:
+                                             self.load_stat(self.statTabWidget.currentIndex()) if index == 1 else
+                                             self.load_photo() if index == 2 else None)
         self.photoLeftButton.clicked.connect(lambda: self.load_photo(left=True))
         self.photoRightButton.clicked.connect(lambda: self.load_photo(right=True))
         # connect: setting
         self.settingWarnButton.toggled.connect(self.toggle_warn_timer)
-        self.settingStatButton.toggled.connect(self.toggle_stat_timer)
-        self.settingStatCycle.currentIndexChanged.connect(lambda index: self.toggle_stat_timer(True))
+        self.connect_setting_stat_cycle_selected(self.settingStatCycleOff)
+        self.connect_setting_stat_cycle_selected(self.settingStatCycle1)
+        self.connect_setting_stat_cycle_selected(self.settingStatCycle2)
+        self.connect_setting_stat_cycle_selected(self.settingStatCycle3)
+        self.connect_setting_stat_cycle_selected(self.settingStatCycle6)
+        self.settingStatCycle1.toggled.connect(self.toggle_stat_timer)
+        self.settingStatCycle2.toggled.connect(self.toggle_stat_timer)
+        self.settingStatCycle3.toggled.connect(self.toggle_stat_timer)
+        self.settingStatCycle6.toggled.connect(self.toggle_stat_timer)
+
+    def connect_setting_stat_cycle_selected(self, cycle: QPushButton) -> None:
+        def selected(toggle: bool) -> None:
+            checked, = [x for x in others if x.isChecked()] or [None]
+            if toggle:
+                checked.setChecked(False)
+            elif not checked:
+                cycle.setChecked(True)
+        others: List[QPushButton] = [
+            self.settingStatCycle1,
+            self.settingStatCycle2,
+            self.settingStatCycle3,
+            self.settingStatCycle6,
+            self.settingStatCycleOff,
+        ]
+        others.remove(cycle)
+        cycle.toggled.connect(selected)
 
     def init_camera_and_capture(self) -> bool:
         available_cameras = QCameraInfo.availableCameras()
@@ -298,8 +318,14 @@ class MyWindow(Window, Form):
         self.cameraButton.setChecked(False)
 
     def get_setting_stat_interval(self) -> int:
-        text = self.settingStatCycle.currentText()
-        text = str(text).replace('시간', '').replace('분', '')
+        cycles: List[QPushButton] = [
+            self.settingStatCycle1,
+            self.settingStatCycle2,
+            self.settingStatCycle3,
+            self.settingStatCycle6,
+        ]
+        checked, = [x for x in cycles if x.isChecked()] or cycles[0:1]
+        text = checked.objectName().replace('settingStatCycle', '', 1)
         msec = int(text) * 3_600_000
         return msec
 
@@ -328,39 +354,31 @@ class MyWindow(Window, Form):
         self.photoImage.setPixmap(self.pixmap)
         self.display_ihunch_status(self.photoStatusBar, record['human'], record['ihunch'])
 
-    def load_stat(self, index=0) -> None:
+    def load_stat(self, index: int = 0) -> None:
         suffix = str(index + 1)
         statImage = getattr(self, 'statImage' + suffix)
         statusbar = getattr(self, 'statStatusBar' + suffix)
         # self.pixmap.loadFromData(b'', 'jpg')
         # statImage.setPixmap(self.pixmap)
-        # statusbar.setFont(get_status_font())
         # statusbar.setText(text)
         # statusbar.setAlignment(Qt.AlignCenter)
         # statusbar.setStyleSheet(f'color: #{color}; border-style: solid;')
 
-    def toggle_all_timers(self, toggle) -> None:
+    def toggle_all_timers(self, toggle: bool) -> None:
         if toggle:
-            self.cameraButton.setText('정지')
             self.start_capture_timer_safe()
-            if self.settingWarnButton.isChecked():
-                self.warn_notifier_timer.start()
-            if self.settingStatButton.isChecked():
-                self.stat_notifier_timer.setInterval(self.get_setting_stat_interval())
-                self.stat_notifier_timer.start()
         else:
-            self.cameraButton.setText('시작')
             self.capture_timer.stop()
-            self.warn_notifier_timer.stop()
-            self.stat_notifier_timer.stop()
+        self.toggle_warn_timer(toggle)
+        self.toggle_stat_timer(toggle)
 
-    def toggle_warn_timer(self, toggle) -> None:
+    def toggle_warn_timer(self, toggle: bool) -> None:
         if toggle and self.cameraButton.isChecked():
             self.warn_notifier_timer.start()
         else:
             self.warn_notifier_timer.stop()
 
-    def toggle_stat_timer(self, toggle) -> None:
+    def toggle_stat_timer(self, toggle: bool) -> None:
         if toggle and self.cameraButton.isChecked():
             self.stat_notifier_timer.setInterval(self.get_setting_stat_interval())
             self.stat_notifier_timer.start()
@@ -374,7 +392,10 @@ class MyWindow(Window, Form):
         stats = [x['ihunch'] > 0.5 for x in records if x['human']]
         ihunch_percent = sum(stats) / len(stats) * 100
         if ihunch_percent > 90:
-            self.warn_notifier.notify('거북목 경고', f'최근 {minutes}분 중에 거북목 자세 비중이 {ihunch_percent:.2f}%를 차지합니다!', '거북목 탈출 넘버원')
+            self.warn_notifier.notify('거북목 경고',
+                                      f'최근 {minutes}분 중에 거북목 자세 비중이 {ihunch_percent:.2f}%를 차지합니다!',
+                                      '거북목 탈출 넘버원',
+                                      on_action=lambda nid, index: self.settingWarnButton.setChecked(False) if index == 1 else None)
 
     def notify_stat(self) -> None:
         hours = self.stat_notifier_timer.interval() // 3_600_000
@@ -382,7 +403,10 @@ class MyWindow(Window, Form):
         records = RecordsDriver.load(beg.strftime(DATETIME_FORMAT))
         stats = [x['ihunch'] > 0.5 for x in records if x['human']]
         ihunch_percent = sum(stats) / len(stats) * 100
-        self.stat_notifier.notify('최근 거북목 통계', f'최근 {hours}시간 중에 거북목 자세 비중이 {ihunch_percent:.2f}%를 차지했습니다.', '거북목 탈출 넘버원')
+        self.stat_notifier.notify('최근 거북목 통계',
+                                  f'최근 {hours}시간 중에 거북목 자세 비중이 {ihunch_percent:.2f}%를 차지했습니다.',
+                                  '거북목 탈출 넘버원',
+                                  on_action=lambda nid, index: self.settingStatCycleOff.setChecked(True) if index == 1 else None)
 
     @staticmethod
     def create_camera(cameras: list, index: int, viewfinder: QCameraViewfinder, error: Callable) -> QCamera:
@@ -417,7 +441,6 @@ class MyWindow(Window, Form):
             text += f' ({ihunch:.4f})'
         else:
             text, color = '자리비움', 'FF971E'
-        # statusbar.setFont(get_status_font())
         statusbar.setText(text)
         statusbar.setAlignment(Qt.AlignCenter)
         statusbar.setStyleSheet(f'color: #{color};')

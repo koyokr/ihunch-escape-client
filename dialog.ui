@@ -177,14 +177,8 @@ QTabWidget::pane{
         <bold>true</bold>
        </font>
       </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="text">
-       <string/>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -754,6 +748,9 @@ QTabWidget::pane{
         <property name="checkable">
          <bool>true</bool>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
         <property name="flat">
          <bool>true</bool>
         </property>
@@ -872,9 +869,6 @@ QTabWidget::pane{
          </size>
         </property>
         <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
          <bool>true</bool>
         </property>
         <property name="flat">
