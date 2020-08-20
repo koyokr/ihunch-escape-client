@@ -335,8 +335,8 @@ class MyWindow(Window, Form):
         # connect: stat, photo
         self.statTabWidget.tabBarClicked.connect(self.load_stat)
         self.tabWidget.tabBarClicked.connect(lambda index:
-                                             self.load_stat(self.statTabWidget.currentIndex()) if index == 1 else
-                                             self.load_photo() if index == 2 else None)
+                                             self.load_photo() if index == 1 else
+                                             self.load_stat(self.statTabWidget.currentIndex()) if index == 2 else None)
         self.photoLeftButton.clicked.connect(lambda: self.load_photo(left=True))
         self.photoRightButton.clicked.connect(lambda: self.load_photo(right=True))
         # connect: setting
