@@ -270,11 +270,11 @@ class MyWindow(Window, Form):
 
     def connect_setting_stat_cycle_selected(self, cycle: QPushButton) -> None:
         def selected(toggle: bool) -> None:
-            checked, = [x for x in others if x.isChecked()] or [None]
-            if toggle:
-                checked.setChecked(False)
-            elif not checked:
+            checkeds = [x for x in others if x.isChecked()]
+            if not checkeds:
                 cycle.setChecked(True)
+            elif toggle:
+                checkeds[0].setChecked(False)
         others: List[QPushButton] = [
             self.settingStatCycle1,
             self.settingStatCycle2,
@@ -324,8 +324,8 @@ class MyWindow(Window, Form):
             self.settingStatCycle3,
             self.settingStatCycle6,
         ]
-        checked, = [x for x in cycles if x.isChecked()] or cycles[0:1]
-        text = checked.objectName().replace('settingStatCycle', '', 1)
+        checkeds = [x for x in cycles if x.isChecked()]
+        text = checkeds[0].objectName().replace('settingStatCycle', '', 1) if checkeds else 1
         msec = int(text) * 3_600_000
         return msec
 
